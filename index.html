@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="_XgqKR2gdwgU2MBlX8iLD3OVsA-VEkrzggUntwiZoI8" />
+  <title>¿Compensa ir a la gasolinera más barata? Calcula tu ahorro real</title>
+  <meta name="description" content="Descubre si realmente compensa ir a una gasolinera más barata según tu consumo, el desvío y los litros que vas a repostar. Calcula tu ahorro real en segundos.">
+  <meta name="robots" content="index,follow" />
+  <meta name="author" content="Daniel Cabrera" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="¿Merece la pena ir a la gasolinera más barata?" />
+  <meta property="og:description" content="Calcula tu ahorro real según consumo, desvío y litros repostados." />
+  <meta property="og:locale" content="es_ES" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="¿Merece la pena ir a la gasolinera más barata?" />
+  <meta name="twitter:description" content="Calcula tu ahorro real en segundos." />
+
+  <link rel="canonical" href="https://dcsolanaprojects.github.io/calculadora-gasolina/" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: #ffffff;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: #0f172a;
+    }
+
+  h2 {
+  margin-top: 22px;
+  margin-bottom: 8px;
+  font-size: 18px;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+h2:not(.faq-block h2) {
+  font-size: 17px;
+}
+
+
+h3 {
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-size: 16px;
+  line-height: 1.3;
+  color: #111827;
+}
+
+p {
+  margin: 6px 0;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.calc-note {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.faq-block {
+  margin-top: 22px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.faq-block h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.faq-item {
+  border-top: 1px solid #e5e7eb;
+  padding: 8px 0;
+}
+
+.faq-item:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.35;
+  flex: 1;
+}
+
+.faq-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  background: #6b7280;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.faq-icon::before {
+  width: 10px;
+  height: 2px;
+}
+
+.faq-icon::after {
+  width: 2px;
+  height: 10px;
+}
+
+.faq-item[open] .faq-icon::after {
+  display: none;
+}
+
+.faq-item p {
+  margin: 8px 0 0;
+  color: #374151;
+  line-height: 1.55;
+}
+
+.faq-item summary:hover .faq-question {
+  color: #2563eb;
+}
+
+@media (max-width: 600px) {
+  .faq-block {
+    padding: 12px;
+  }
+
+  .faq-question {
+    font-size: 15px;
+  }
+
+  .faq-item p {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+}
+
+.breakdown:empty {
+  display: none;
+}
+
+    .lead {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .nudge {
+      margin-top: 10px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      font-size: 16px;
+      background: #f9fafb;
+      color: #111827;
+      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-reset {
+      background: #e5e7eb;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .btn-reset:hover {
+      background: #d1d5db;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 12px;
+      display: block;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .ok {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .bad {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .neutral {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .breakdown {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fafafa;
+      color: #374151;
+      font-size: 14px;
+      line-height: 1.6;
+      display: block;
+    }
+
+    .calc-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      .container {
+        padding: 20px 16px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 24px;
+        line-height: 1.15;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TXNSN93S5L');
+</script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>¿Merece la pena ir a la gasolinera más barata?</h1>
+<p style="display:none;">
+Calculadora para saber si compensa ir a una gasolinera más barata, calcular ahorro en combustible, distancia rentable y coste real del desvío.
+</p>
+    <p class="lead">Ir a la gasolinera más barata no siempre significa ahorrar.</p>
+
+    <p>
+      Si tienes que desviarte o tu coche consume bastante, puedes acabar gastando más dinero sin darte cuenta.
+    </p>
+
+    <p class="nudge">Comprueba si estás perdiendo dinero.</p>
+
+    <form id="form">
+      <div class="grid">
+        <div class="field">
+          <label for="consumo">Consumo (L/100 km)</label>
+          <input type="number" id="consumo" value="6.5" step="0.1" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="precio">Precio combustible (€/L)</label>
+          <input type="number" id="precio" value="1.55" step="0.01" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="desvio">Desvío solo ida (km)</label>
+          <input type="number" id="desvio" value="2" step="0.1" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="diferencia">Diferencia de precio (€/L)</label>
+          <input type="number" id="diferencia" value="0.06" step="0.01" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field full">
+          <label for="litros">Litros a repostar</label>
+          <input type="number" id="litros" value="40" step="0.1" min="0" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="reset" class="btn-reset" id="resetBtn">Reiniciar</button>
+      </div>
+    </form>
+
+    <div id="resultado" class="result neutral">Introduce tus datos para ver el resultado.</div>
+    <div id="detalle" class="breakdown"></div>
+
+    <p class="calc-note">
+      El resultado se actualiza automáticamente al cambiar cualquier dato.
+    </p>
+
+    <h2>Cómo saber si compensa ir a una gasolinera más barata</h2>
+    <p>
+      El precio por litro no lo es todo. También importa la distancia, el consumo y los litros que vas a repostar.
+    </p>
+
+    <h2>Cuándo sí compensa</h2>
+    <p>
+      Cuando la diferencia de precio es alta, el desvío es pequeño y vas a repostar bastante.
+    </p>
+
+    <h2>Cuándo no compensa</h2>
+    <p>
+      Si tienes que desviarte mucho o el ahorro por litro es pequeño, puedes acabar perdiendo dinero.
+    </p>
+
+<div class="faq-block">
+  <h2>Preguntas frecuentes</h2>
+
+  <details class="faq-item" open>
+    <summary><span class="faq-question">¿Cuándo compensa ir a una gasolinera más barata?</span><span class="faq-icon"></span></summary>
+    <p>
+      Compensa cuando la diferencia de precio por litro es alta, el desvío es pequeño y vas a repostar bastante combustible. Si tienes que desviarte demasiado, el ahorro puede desaparecer.
+    </p>
+  </details>
+
+  <details class="faq-item">
+    <summary><span class="faq-question">¿Cuántos kilómetros merece la pena desviarse?</span><span class="faq-icon"></span></summary>
+    <p>
+      Depende del consumo de tu coche, el precio del combustible y los litros que vayas a repostar. Esta calculadora te muestra el límite de kilómetros a partir del cual deja de compensar.
+    </p>
+  </details>
+
+  <details class="faq-item">
+    <summary><span class="faq-question">¿La gasolina barata es peor para el coche?</span><span class="faq-icon"></span></summary>
+    <p>
+      En España, el combustible cumple las mismas normativas independientemente de la estación de servicio. La diferencia de precio suele deberse a costes operativos, no a una peor calidad base.
+    </p>
+  </details>
+
+  <details class="faq-item">
+    <summary><span class="faq-question">¿Cómo se calcula el ahorro real?</span><span class="faq-icon"></span></summary>
+    <p>
+      Se calcula restando al ahorro por litro el coste adicional de combustible que supone el desvío. Si el resultado es positivo, compensa; si es negativo, estás perdiendo dinero.
+    </p>
+  </details>
+</div>
+
+  
+
+  <script>
+    const consumoEl = document.getElementById("consumo");
+    const precioEl = document.getElementById("precio");
+    const desvioEl = document.getElementById("desvio");
+    const diferenciaEl = document.getElementById("diferencia");
+    const litrosEl = document.getElementById("litros");
+    const resultadoEl = document.getElementById("resultado");
+    const detalleEl = document.getElementById("detalle");
+    const resetBtn = document.getElementById("resetBtn");
+
+    function formatEuro(num) {
+      return num.toLocaleString("es-ES", {
+        style: "currency",
+        currency: "EUR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatKm(num) {
+      return num.toLocaleString("es-ES", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      }) + " km";
+    }
+
+    function getValues() {
+      return {
+        consumo: parseFloat(consumoEl.value),
+        precio: parseFloat(precioEl.value),
+        desvio: parseFloat(desvioEl.value),
+        diferencia: parseFloat(diferenciaEl.value),
+        litros: parseFloat(litrosEl.value)
+      };
+    }
+
+    function valuesAreValid(v) {
+      return [v.consumo, v.precio, v.desvio, v.diferencia, v.litros].every(
+        n => !isNaN(n) && n >= 0
+      ) && v.consumo > 0 && v.precio > 0;
+    }
+
+    function calcularAutomatico() {
+      const v = getValues();
+
+      if (!valuesAreValid(v)) {
+        resultadoEl.className = "result bad";
+        resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
+        detalleEl.innerHTML = "";
+        return;
+      }
+
+      const costeDesvio = (v.desvio * 2 * v.consumo / 100) * v.precio;
+      const ahorroBruto = v.litros * v.diferencia;
+      const ahorroReal = ahorroBruto - costeDesvio;
+      const desvioMax = v.diferencia > 0 && v.litros > 0
+        ? (v.litros * v.diferencia * 100) / (2 * v.consumo * v.precio)
+        : 0;
+
+      if (v.diferencia <= 0 || v.litros <= 0) {
+        resultadoEl.className = "result neutral";
+        resultadoEl.textContent = "Con estos datos no hay ahorro potencial que comparar.";
+      } else if (ahorroReal > 0.05) {
+        resultadoEl.className = "result ok";
+        resultadoEl.textContent = `Sí compensa. Ahorras ${formatEuro(ahorroReal)} en términos reales.`;
+      } else if (ahorroReal < -0.05) {
+        resultadoEl.className = "result bad";
+        resultadoEl.textContent = `No compensa. Perderías ${formatEuro(Math.abs(ahorroReal))} con ese desvío.`;
+      } else {
+        resultadoEl.className = "result neutral";
+        resultadoEl.textContent = "Estás casi en empate. La diferencia real es mínima.";
+      }
+
+      let textoLimite = "Con estos datos, no compensa prácticamente ningún desvío.";
+      if (isFinite(desvioMax) && desvioMax > 0) {
+        textoLimite = `${formatKm(desvioMax)} por trayecto.`;
+      }
+
+      detalleEl.innerHTML = `
+        <strong>Ahorro bruto:</strong> ${formatEuro(ahorroBruto)}<br>
+        <strong>Coste del desvío:</strong> ${formatEuro(costeDesvio)}<br>
+        <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}<br>
+        <strong>Límite rentable de desvío:</strong> ${textoLimite}
+      `;
+    }
+
+    [consumoEl, precioEl, desvioEl, diferenciaEl, litrosEl].forEach(input => {
+      input.addEventListener("input", calcularAutomatico);
+    });
+
+    resetBtn.addEventListener("click", () => {
+      setTimeout(calcularAutomatico, 0);
+    });
+
+    calcularAutomatico();
+  </script>
+</body>
+</html>
