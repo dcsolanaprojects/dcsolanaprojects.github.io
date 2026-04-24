@@ -311,7 +311,67 @@ p {
       color: #6b7280;
     }
 
-    
+.link-box {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.link-box strong {
+  display: block;
+  font-size: 14px;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.link-box p {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.link-box a {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.link-box a:hover {
+  text-decoration: underline;
+}
+
+.small-link {
+  display: inline-block;
+  margin-top: 4px;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.small-link:hover {
+  text-decoration: underline;
+}
+
+.secondary-link {
+  margin-top: 10px;
+}
+
+.secondary-link a {
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.secondary-link a:hover {
+  text-decoration: underline;
+}
 
     @media (max-width: 600px) {
       body {
@@ -365,13 +425,9 @@ p {
 <p style="display:none;">
 Calculadora para saber si compensa ir a una gasolinera más barata, calcular ahorro en combustible, distancia rentable y coste real del desvío.
 </p>
-    <p class="lead">Ir a la gasolinera más barata no siempre significa ahorrar.</p>
+    <p class="lead">Comprueba en segundos si te compensa desviarte para repostar gasolina más barata.</p>
 
-    <p>
-      Si tienes que desviarte o tu coche consume bastante, puedes acabar gastando más dinero sin darte cuenta.
-    </p>
 
-    <p class="nudge">Comprueba si estás perdiendo dinero.</p>
 
     <form id="form">
       <div class="grid">
@@ -407,31 +463,30 @@ Calculadora para saber si compensa ir a una gasolinera más barata, calcular aho
     </form>
 
     <div id="resultado" class="result neutral">Introduce tus datos para ver el resultado.</div>
+   
     <div id="detalle" class="breakdown"></div>
 
     <p class="calc-note">
       El resultado se actualiza automáticamente al cambiar cualquier dato.
     </p>
 
-    <h2>Cómo saber si compensa ir a una gasolinera más barata</h2>
-    <p>
-      El precio por litro no lo es todo. También importa la distancia, el consumo y los litros que vas a repostar.
-    </p>
+<h2>¿Cuándo compensa ir a una gasolinera más barata?</h2>
+<p>
+No siempre compensa ir a la gasolinera más barata. Para saberlo, hay que tener en cuenta la diferencia de precio por litro, los kilómetros de desvío, el consumo del coche y los litros que vas a repostar.
+</p>
 
-    <h2>Cuándo sí compensa</h2>
-    <p>
-      Cuando la diferencia de precio es alta, el desvío es pequeño y vas a repostar bastante.
-    </p>
+<p>
+Compensa cuando el ahorro por litro es suficiente y el desvío es pequeño. Si tienes que recorrer muchos kilómetros o la diferencia de precio es baja, el coste del trayecto puede superar el ahorro.
+</p>
 
-    <h2>Cuándo no compensa</h2>
-    <p>
-      Si tienes que desviarte mucho o el ahorro por litro es pequeño, puedes acabar perdiendo dinero.
-    </p>
+<p>
+Con esta calculadora puedes estimar el ahorro real en segundos y decidir si merece la pena desviarte o es mejor repostar en la gasolinera habitual.
+</p>
 
 <div class="faq-block">
   <h2>Preguntas frecuentes</h2>
 
-  <details class="faq-item" open>
+  <details class="faq-item">
     <summary><span class="faq-question">¿Cuándo compensa ir a una gasolinera más barata?</span><span class="faq-icon"></span></summary>
     <p>
       Compensa cuando la diferencia de precio por litro es alta, el desvío es pequeño y vas a repostar bastante combustible. Si tienes que desviarte demasiado, el ahorro puede desaparecer.
@@ -526,7 +581,7 @@ Calculadora para saber si compensa ir a una gasolinera más barata, calcular aho
         resultadoEl.textContent = "Con estos datos no hay ahorro potencial que comparar.";
       } else if (ahorroReal > 0.05) {
         resultadoEl.className = "result ok";
-        resultadoEl.textContent = `Sí compensa. Ahorras ${formatEuro(ahorroReal)} en términos reales.`;
+        resultadoEl.textContent = `Sí compensa. Ahorras aproximadamente ${formatEuro(ahorroReal)}.`;
       } else if (ahorroReal < -0.05) {
         resultadoEl.className = "result bad";
         resultadoEl.textContent = `No compensa. Perderías ${formatEuro(Math.abs(ahorroReal))} con ese desvío.`;
@@ -537,7 +592,7 @@ Calculadora para saber si compensa ir a una gasolinera más barata, calcular aho
 
       let textoLimite = "Con estos datos, no compensa prácticamente ningún desvío.";
       if (isFinite(desvioMax) && desvioMax > 0) {
-        textoLimite = `${formatKm(desvioMax)} por trayecto.`;
+        textoLimite = `${formatKm(desvioMax)} (solo ida)`;
       }
 
       detalleEl.innerHTML = `
@@ -545,6 +600,10 @@ Calculadora para saber si compensa ir a una gasolinera más barata, calcular aho
         <strong>Coste del desvío:</strong> ${formatEuro(costeDesvio)}<br>
         <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}<br>
         <strong>Límite rentable de desvío:</strong> ${textoLimite}
+<br><br>
+<div class="secondary-link">
+  <a href="/coste-km-coche/">¿No te cuadra? Mira el coste real por km →</a>
+</div>
       `;
     }
 
