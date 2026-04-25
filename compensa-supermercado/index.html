@@ -305,120 +305,126 @@
   </div>
 
   <script>
-    const ahorroCompraEl = document.getElementById("ahorroCompra");
-    const desvioEl = document.getElementById("desvio");
-    const consumoEl = document.getElementById("consumo");
-    const precioEl = document.getElementById("precio");
-    const resultadoEl = document.getElementById("resultado");
-    const detalleEl = document.getElementById("detalle");
-    const resetBtn = document.getElementById("resetBtn");
-    const extraKmEl = document.getElementById("extraKm");
-const params = new URLSearchParams(window.location.search);
+  const ahorroCompraEl = document.getElementById("ahorroCompra");
+  const desvioEl = document.getElementById("desvio");
+  const consumoEl = document.getElementById("consumo");
+  const precioEl = document.getElementById("precio");
+  const extraKmEl = document.getElementById("extraKm");
+  const resultadoEl = document.getElementById("resultado");
+  const detalleEl = document.getElementById("detalle");
+  const resetBtn = document.getElementById("resetBtn");
 
-function setValueFromParam(input, paramName) {
-  const value = params.get(paramName);
-  if (value !== null && value !== "") {
-    input.value = value;
+  const params = new URLSearchParams(window.location.search);
+
+  function setValueFromParam(input, paramName) {
+    const value = params.get(paramName);
+    if (value !== null && value !== "") {
+      input.value = value;
+    }
   }
-}
 
-setValueFromParam(consumoEl, "consumo");
-setValueFromParam(precioEl, "precio");
-const costeKmParam = parseFloat(params.get("costeKm"));
+  setValueFromParam(consumoEl, "consumo");
+  setValueFromParam(precioEl, "precio");
 
-if (!isNaN(costeKmParam) && costeKmParam > 0) {
-  const consumoInicial = parseFloat(consumoEl.value);
-  const precioInicial = parseFloat(precioEl.value);
+  const costeKmParam = parseFloat(params.get("costeKm"));
 
-  if (!isNaN(consumoInicial) && !isNaN(precioInicial) && consumoInicial > 0 && precioInicial > 0) {
-    const costeCombustibleKm = (consumoInicial / 100) * precioInicial;
-    const desgasteKm = Math.max(0, costeKmParam - costeCombustibleKm);
+  if (!isNaN(costeKmParam) && costeKmParam > 0) {
+    const consumoInicial = parseFloat(consumoEl.value);
+    const precioInicial = parseFloat(precioEl.value);
 
-    extraKmEl.value = desgasteKm.toFixed(2);
+    if (!isNaN(consumoInicial) && !isNaN(precioInicial) && consumoInicial > 0 && precioInicial > 0) {
+      const costeCombustibleKm = (consumoInicial / 100) * precioInicial;
+      const desgasteKm = Math.max(0, costeKmParam - costeCombustibleKm);
+      extraKmEl.value = desgasteKm.toFixed(2);
+    }
   }
-}
 
-    function formatEuro(num) {
-      return num.toLocaleString("es-ES", {
-        style: "currency",
-        currency: "EUR",
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-    }
+  setValueFromParam(extraKmEl, "extraCoste");
 
-    function getValues() {
-      return {
-  ahorroCompra: parseFloat(ahorroCompraEl.value),
-  desvio: parseFloat(desvioEl.value),
-  consumo: parseFloat(consumoEl.value),
-  precio: parseFloat(precioEl.value),
-  extraKm: parseFloat(extraKmEl.value) || 0,
-
-};
-    }
-
-    function valuesAreValid(v) {
-  return [v.ahorroCompra, v.desvio, v.consumo, v.precio, v.extraKm].every(
-  n => !isNaN(n) && n >= 0
-) && v.consumo > 0 && v.precio > 0;
-}
-
-    function calcularAutomatico() {
-      const v = getValues();
-
-      if (!valuesAreValid(v)) {
-        resultadoEl.className = "result bad";
-        resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
-        detalleEl.innerHTML = "";
-        return;
-      }
-
-const kmTotales = v.desvio * 2;
-const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
-const costeExtra = kmTotales * v.extraKm;
-const costeRealDesplazamiento = costeCombustible + costeExtra;
-const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
-
-      if (ahorroReal > 0.05) {
-        resultadoEl.className = "result ok";
-        resultadoEl.textContent = `Sí compensa. Ahorras aproximadamente ${formatEuro(ahorroReal)}.`;
-      } else if (ahorroReal < -0.05) {
-        resultadoEl.className = "result bad";
-        resultadoEl.textContent = `No compensa. Perderías aproximadamente ${formatEuro(Math.abs(ahorroReal))}.`;
-      } else {
-        resultadoEl.className = "result neutral";
-        resultadoEl.textContent = "Estás prácticamente en empate.";
-      }
-
-      const extraCosteParam = usaCosteRealKm
-  ? `&extraCoste=${(v.costeKm - ((v.consumo / 100) * v.precio)).toFixed(4)}`
-  : "";
-
-const linkCosteKm = `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}&return=supermercado`;
-detalleEl.innerHTML = `
-  <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
-  <strong>Kilómetros extra totales:</strong> ${kmTotales.toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km<br>
-  <strong>Coste combustible del desplazamiento:</strong> ${formatEuro(costeCombustible)}<br>
-  <strong>Coste desgaste/mantenimiento:</strong> ${v.extraKm > 0 ? formatEuro(costeExtra) : "no incluido"}<br>
-  <strong>Coste real del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>
-  <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}
-  <br><br>
-  <div class="secondary-link">
-    <a href="${linkCosteKm}">${v.extraKm > 0 ? "Ajustar coste real por km →" : "Calcular coste real por km →"}</a>
-  </div>
-`;
-    }
-
-    [ahorroCompraEl, desvioEl, consumoEl, precioEl, extraKmEl].forEach(input => {
-  input.addEventListener("input", calcularAutomatico);
-});
-
-    resetBtn.addEventListener("click", () => {
-      setTimeout(calcularAutomatico, 0);
+  function formatEuro(num) {
+    return num.toLocaleString("es-ES", {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     });
+  }
 
-    calcularAutomatico();
-  </script>
+  function formatKm(num) {
+    return num.toLocaleString("es-ES", {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    }) + " km";
+  }
+
+  function getValues() {
+    return {
+      ahorroCompra: parseFloat(ahorroCompraEl.value),
+      desvio: parseFloat(desvioEl.value),
+      consumo: parseFloat(consumoEl.value),
+      precio: parseFloat(precioEl.value),
+      extraKm: parseFloat(extraKmEl.value) || 0
+    };
+  }
+
+  function valuesAreValid(v) {
+    return [v.ahorroCompra, v.desvio, v.consumo, v.precio, v.extraKm].every(
+      n => !isNaN(n) && n >= 0
+    ) && v.consumo > 0 && v.precio > 0;
+  }
+
+  function calcularAutomatico() {
+    const v = getValues();
+
+    if (!valuesAreValid(v)) {
+      resultadoEl.className = "result bad";
+      resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
+      detalleEl.innerHTML = "";
+      return;
+    }
+
+    const kmTotales = v.desvio * 2;
+    const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
+    const costeExtra = kmTotales * v.extraKm;
+    const costeRealDesplazamiento = costeCombustible + costeExtra;
+    const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
+
+    if (ahorroReal > 0.05) {
+      resultadoEl.className = "result ok";
+      resultadoEl.textContent = `Sí compensa. Ahorras aproximadamente ${formatEuro(ahorroReal)}.`;
+    } else if (ahorroReal < -0.05) {
+      resultadoEl.className = "result bad";
+      resultadoEl.textContent = `No compensa. Perderías aproximadamente ${formatEuro(Math.abs(ahorroReal))}.`;
+    } else {
+      resultadoEl.className = "result neutral";
+      resultadoEl.textContent = "Estás prácticamente en empate.";
+    }
+
+    const linkCosteKm = `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}&return=supermercado`;
+
+    detalleEl.innerHTML = `
+      <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
+      <strong>Kilómetros extra totales:</strong> ${formatKm(kmTotales)}<br>
+      <strong>Coste combustible del desplazamiento:</strong> ${formatEuro(costeCombustible)}<br>
+      <strong>Coste desgaste/mantenimiento:</strong> ${v.extraKm > 0 ? formatEuro(costeExtra) : "no incluido"}<br>
+      <strong>Coste real del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>
+      <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}
+      <br><br>
+      <div class="secondary-link">
+        <a href="${linkCosteKm}">${v.extraKm > 0 ? "Ajustar coste real por km →" : "Calcular coste real por km →"}</a>
+      </div>
+    `;
+  }
+
+  [ahorroCompraEl, desvioEl, consumoEl, precioEl, extraKmEl].forEach(input => {
+    input.addEventListener("input", calcularAutomatico);
+  });
+
+  resetBtn.addEventListener("click", () => {
+    setTimeout(calcularAutomatico, 0);
+  });
+
+  calcularAutomatico();
+</script>
 </body>
 </html>
