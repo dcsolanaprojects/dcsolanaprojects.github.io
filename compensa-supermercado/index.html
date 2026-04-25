@@ -354,7 +354,7 @@ if (!isNaN(costeKmParam) && costeKmParam > 0) {
   consumo: parseFloat(consumoEl.value),
   precio: parseFloat(precioEl.value),
   extraKm: parseFloat(extraKmEl.value) || 0,
-  costeKm: parseFloat(params.get("costeKm"))
+
 };
     }
 
@@ -374,18 +374,10 @@ if (!isNaN(costeKmParam) && costeKmParam > 0) {
         return;
       }
 
-      const kmTotales = v.desvio * 2;
+const kmTotales = v.desvio * 2;
 const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
-
-const usaCosteRealKm = !isNaN(v.costeKm) && v.costeKm > 0;
-const costeRealDesplazamiento = usaCosteRealKm
-  ? kmTotales * v.costeKm
-  : costeCombustible;
-
-const costeExtra = usaCosteRealKm
-  ? Math.max(0, costeRealDesplazamiento - costeCombustible)
-  : 0;
-
+const costeExtra = kmTotales * v.extraKm;
+const costeRealDesplazamiento = costeCombustible + costeExtra;
 const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
 
       if (ahorroReal > 0.05) {
@@ -403,18 +395,17 @@ const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
   ? `&extraCoste=${(v.costeKm - ((v.consumo / 100) * v.precio)).toFixed(4)}`
   : "";
 
-const linkCosteKm = `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}${extraCosteParam}&return=supermercado`;
-
+const linkCosteKm = `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}&return=supermercado`;
 detalleEl.innerHTML = `
   <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
   <strong>Kilómetros extra totales:</strong> ${kmTotales.toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km<br>
   <strong>Coste combustible del desplazamiento:</strong> ${formatEuro(costeCombustible)}<br>
-  <strong>Coste desgaste/mantenimiento:</strong> ${usaCosteRealKm || v.extraKm > 0 ? formatEuro(costeExtra) : "no incluido"}<br>
-  ${usaCosteRealKm ? `<strong>Coste real del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>` : `<strong>Coste total del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>`}
+  <strong>Coste desgaste/mantenimiento:</strong> ${v.extraKm > 0 ? formatEuro(costeExtra) : "no incluido"}<br>
+  <strong>Coste real del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>
   <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}
   <br><br>
   <div class="secondary-link">
-    <a href="${linkCosteKm}">${usaCosteRealKm ? "Recalcular coste real por km →" : "Calcular coste real por km →"}</a>
+    <a href="${linkCosteKm}">${v.extraKm > 0 ? "Ajustar coste real por km →" : "Calcular coste real por km →"}</a>
   </div>
 `;
     }
