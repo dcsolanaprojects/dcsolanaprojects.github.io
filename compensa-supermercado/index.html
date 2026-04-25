@@ -323,6 +323,20 @@ function setValueFromParam(input, paramName) {
 
 setValueFromParam(consumoEl, "consumo");
 setValueFromParam(precioEl, "precio");
+const costeKmParam = parseFloat(params.get("costeKm"));
+
+if (!isNaN(costeKmParam) && costeKmParam > 0) {
+  const consumoInicial = parseFloat(consumoEl.value);
+  const precioInicial = parseFloat(precioEl.value);
+
+  if (!isNaN(consumoInicial) && !isNaN(precioInicial) && consumoInicial > 0 && precioInicial > 0) {
+    const costeCombustibleKm = (consumoInicial / 100) * precioInicial;
+    const desgasteKm = Math.max(0, costeKmParam - costeCombustibleKm);
+
+    extraKmEl.value = desgasteKm.toFixed(2);
+  }
+}
+
     function formatEuro(num) {
       return num.toLocaleString("es-ES", {
         style: "currency",
