@@ -207,6 +207,7 @@
 
     setValueFromParam(consumoEl, "consumo");
     setValueFromParam(precioEl, "precio");
+setValueFromParam(extraCosteEl, "extraCoste");
 
     function formatEuro(num) {
       return num.toLocaleString("es-ES", {
@@ -259,10 +260,11 @@
       `;
 
       const commonParams = {
-        consumo: consumo,
-        precio: precio,
-        costeKm: totalKm.toFixed(4)
-      };
+  consumo: consumo,
+  precio: precio,
+  extraCoste: extra.toFixed(4),
+  costeKm: totalKm.toFixed(4)
+};
 
       const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
       const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
