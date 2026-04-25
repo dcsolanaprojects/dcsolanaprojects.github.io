@@ -91,13 +91,50 @@
       line-height: 1.6;
     }
 
-    .link-box {
+
+    .action-box {
       margin-top: 20px;
-      padding: 14px;
-      border-radius: 10px;
+      padding: 16px;
+      border-radius: 12px;
       background: #f9fafb;
       border: 1px solid #e5e7eb;
       line-height: 1.5;
+    }
+
+    .action-box strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    .action-card {
+      display: block;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      text-decoration: none;
+    }
+
+    .action-card:hover {
+      text-decoration: none;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .action-card span {
+      display: block;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .action-card small {
+      display: block;
+      margin-top: 4px;
+      color: #6b7280;
+      line-height: 1.4;
+      font-weight: 400;
     }
 
     a {
@@ -180,12 +217,7 @@
 
     <div id="detalle" class="breakdown"></div>
 
-    <div id="acciones" class="link-box"></div>
-
-    <div class="link-box">
-      <strong>También puedes calcular</strong><br>
-      <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/">Cuánto cuesta mantener tu coche al mes →</a>
-    </div>
+    <div id="acciones" class="action-box"></div>
 
     <div class="footer-link">
       <a href="https://dcsolanaprojects.github.io/">Ver todas las herramientas →</a>
@@ -280,23 +312,29 @@ const commonParams = {
 
       const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
       const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
+      const costeMensualUrl = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", {
+        consumo: consumo,
+        precio: precio
+      });
 
       if (returnTo === "gasolina") {
         accionesEl.innerHTML = `
-          <strong>Usar este coste en la calculadora de gasolina</strong><br>
-          <a href="${gasolinaUrl}">Volver a calcular el desvío con este coste →</a>
+          <strong>Aprovecha este resultado</strong>
+          <a class="action-card" href="${gasolinaUrl}"><span>Volver a la calculadora de gasolina →</span><small>Recalcula el desvío usando este coste real por km.</small></a>
+          <a class="action-card" href="${costeMensualUrl}"><span>Estimar coste mensual del coche →</span><small>Convierte consumo y precio en una estimación mensual completa.</small></a>
         `;
       } else if (returnTo === "supermercado") {
         accionesEl.innerHTML = `
-          <strong>Usar este coste en la calculadora de supermercado</strong><br>
-          <a href="${supermercadoUrl}">Volver a calcular la compra con este coste →</a>
+          <strong>Aprovecha este resultado</strong>
+          <a class="action-card" href="${supermercadoUrl}"><span>Volver a la calculadora de supermercado →</span><small>Recalcula la compra usando este coste real por km.</small></a>
+          <a class="action-card" href="${costeMensualUrl}"><span>Estimar coste mensual del coche →</span><small>Convierte consumo y precio en una estimación mensual completa.</small></a>
         `;
       } else {
         accionesEl.innerHTML = `
-          <strong>Usar este resultado en otra herramienta</strong><br><br>
-          <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${consumo}&precio=${precio}&extraCoste=${extra.toFixed(4)}">Calcular el coste mensual real del coche →</a><br>
-          <a href="${gasolinaUrl}">Calcular si compensa desviarte por gasolina →</a><br>
-          <a href="${supermercadoUrl}">Calcular si compensa ir a otro supermercado →</a>
+          <strong>Aprovecha este resultado</strong>
+          <a class="action-card" href="${costeMensualUrl}"><span>Ver coste mensual real del coche →</span><small>Calcula cuánto te cuesta tener coche al mes y al año.</small></a>
+          <a class="action-card" href="${gasolinaUrl}"><span>Calcular si compensa una gasolinera más barata →</span><small>Usa tu coste real por km para decidir si merece la pena desviarte.</small></a>
+          <a class="action-card" href="${supermercadoUrl}"><span>Calcular si compensa ir a otro supermercado →</span><small>Comprueba si el ahorro de la compra supera el coste del trayecto.</small></a>
         `;
       }
     }
