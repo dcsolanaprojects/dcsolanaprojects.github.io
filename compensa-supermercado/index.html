@@ -102,6 +102,38 @@
       box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
     }
 
+    .hint {
+      font-size: 13px;
+      color: #4b5563;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .hint a {
+      color: #2563eb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .hint a:hover {
+      text-decoration: underline;
+    }
+
+    .secondary-link {
+      margin-top: 4px;
+    }
+
+    .secondary-link a {
+      color: #2563eb;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .secondary-link a:hover {
+      text-decoration: underline;
+    }
+
     .buttons {
       display: flex;
       gap: 10px;
@@ -161,21 +193,16 @@
       line-height: 1.6;
     }
 
-    .secondary-link {
+    .breakdown:empty,
+    .action-box:empty {
+      display: none;
+    }
+
+    .calc-note {
       margin-top: 10px;
+      font-size: 13px;
+      color: #6b7280;
     }
-
-    .secondary-link a {
-      color: #2563eb;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .secondary-link a:hover {
-      text-decoration: underline;
-    }
-
 
     .action-box {
       margin-top: 20px;
@@ -237,19 +264,6 @@
       text-decoration: underline;
     }
 
-    .hint a {
-  color: #2563eb;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.hint a:hover {
-  text-decoration: underline;
-}
-.link-box:empty {
-  display: none;
-}
-
     @media (max-width: 600px) {
       body { padding: 12px; }
 
@@ -283,7 +297,6 @@
     }
   </style>
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -330,17 +343,21 @@
           <label for="precio">Precio combustible (€/L)</label>
           <input type="number" id="precio" value="1.55" step="0.01" min="0" inputmode="decimal">
         </div>
-<div class="field">
-  <label for="extraKm">Coste completo del coche por km (opcional)</label>
-<input type="number" id="extraKm" placeholder="Ej: 0.05" step="0.01" min="0" inputmode="decimal">
-  <div class="hint">
-  Déjalo vacío si quieres calcular solo el coste de combustible.
-Si quieres incluir mantenimiento, seguro, impuestos o depreciación,
-calcula primero el
-<a id="linkHintCosteMensual" href="https://dcsolanaprojects.github.io/coste-mensual-coche/">coste mensual real del coche</a>.
-</div>
-</div>
-        
+
+        <div class="secondary-link full">
+          <a href="#" id="toggleAdvanced">Usar coste completo del coche →</a>
+        </div>
+
+        <div class="field full" id="advancedBlock" style="display:none;">
+          <label for="extraKm">Coste completo del coche por km (opcional)</label>
+          <input type="number" id="extraKm" placeholder="Ej: 0.05" step="0.01" min="0" inputmode="decimal">
+          <div class="hint" id="hintCosteKm">
+            Déjalo vacío si quieres calcular solo el combustible.
+            Si quieres incluir mantenimiento, seguro, impuestos o depreciación,
+            calcula primero el
+            <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/">coste mensual real del coche</a>.
+          </div>
+        </div>
       </div>
 
       <div class="buttons">
@@ -365,172 +382,209 @@ calcula primero el
       Esta calculadora no compara catálogos ni precios producto a producto: sirve para hacer una estimación rápida cuando ya tienes una idea aproximada de cuánto puedes ahorrar.
     </p>
 
-    <div class="breakdown">
-  <strong>Herramientas relacionadas</strong><br>
-  <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/">Calcular el coste mensual real de tu coche →</a><br>
-  <a href="https://dcsolanaprojects.github.io/coste-km-coche/">Calcular el coste real por kilómetro →</a>
-</div>
-<div class="footer-link">
+    <div class="footer-link">
       <a href="https://dcsolanaprojects.github.io/">Ver todas las herramientas →</a>
     </div>
   </div>
 
   <script>
-  const ahorroCompraEl = document.getElementById("ahorroCompra");
-  const desvioEl = document.getElementById("desvio");
-  const consumoEl = document.getElementById("consumo");
-  const precioEl = document.getElementById("precio");
-  const extraKmEl = document.getElementById("extraKm");
-  const linkHintCosteKmEl = document.getElementById("linkHintCosteKm");
-  const resultadoEl = document.getElementById("resultado");
-  const detalleEl = document.getElementById("detalle");
-  const accionesEl = document.getElementById("acciones");
-  const resetBtn = document.getElementById("resetBtn");
+    const ahorroCompraEl = document.getElementById("ahorroCompra");
+    const desvioEl = document.getElementById("desvio");
+    const consumoEl = document.getElementById("consumo");
+    const precioEl = document.getElementById("precio");
+    const extraKmEl = document.getElementById("extraKm");
+    const resultadoEl = document.getElementById("resultado");
+    const detalleEl = document.getElementById("detalle");
+    const accionesEl = document.getElementById("acciones");
+    const resetBtn = document.getElementById("resetBtn");
 
-  const params = new URLSearchParams(window.location.search);
+    const toggleAdvancedEl = document.getElementById("toggleAdvanced");
+    const advancedBlockEl = document.getElementById("advancedBlock");
+    const hintCosteKmEl = document.getElementById("hintCosteKm");
 
-  function setValueFromParam(input, paramName) {
-    const value = params.get(paramName);
-    if (value !== null && value !== "") {
-      input.value = value;
+    const params = new URLSearchParams(window.location.search);
+
+    const vieneDeCosteMensual =
+      params.get("origen") === "coste-mensual" ||
+      params.get("kmAnuales") !== null;
+
+    const hintDefault = hintCosteKmEl ? hintCosteKmEl.innerHTML : "";
+
+    function setValueFromParam(input, paramName) {
+      const value = params.get(paramName);
+      if (value !== null && value !== "") {
+        input.value = value;
+      }
     }
-  }
 
-  setValueFromParam(consumoEl, "consumo");
-  setValueFromParam(precioEl, "precio");
-setValueFromParam(ahorroCompraEl, "ahorroCompra");
-setValueFromParam(desvioEl, "desvio");
-setValueFromParam(extraKmEl, "extraCoste");
+    setValueFromParam(consumoEl, "consumo");
+    setValueFromParam(precioEl, "precio");
+    setValueFromParam(ahorroCompraEl, "ahorroCompra");
+    setValueFromParam(desvioEl, "desvio");
+    setValueFromParam(extraKmEl, "extraCoste");
 
-  const costeKmParam = parseFloat(params.get("costeKm"));
+    const costeKmParam = parseFloat(params.get("costeKm"));
 
-  if (!isNaN(costeKmParam) && costeKmParam > 0) {
-    const consumoInicial = parseFloat(consumoEl.value);
-    const precioInicial = parseFloat(precioEl.value);
+    if (!isNaN(costeKmParam) && costeKmParam > 0) {
+      const consumoInicial = parseFloat(consumoEl.value);
+      const precioInicial = parseFloat(precioEl.value);
 
-    if (!isNaN(consumoInicial) && !isNaN(precioInicial) && consumoInicial > 0 && precioInicial > 0) {
-      const costeCombustibleKm = (consumoInicial / 100) * precioInicial;
-      const desgasteKm = Math.max(0, costeKmParam - costeCombustibleKm);
-      extraKmEl.value = desgasteKm.toFixed(2);
+      if (!isNaN(consumoInicial) && !isNaN(precioInicial) && consumoInicial > 0 && precioInicial > 0) {
+        const costeCombustibleKm = (consumoInicial / 100) * precioInicial;
+        const costeNoCombustibleKm = Math.max(0, costeKmParam - costeCombustibleKm);
+        extraKmEl.value = costeNoCombustibleKm.toFixed(2);
+      }
     }
-  }
 
-  setValueFromParam(extraKmEl, "extraCoste");
+    if (hintCosteKmEl && vieneDeCosteMensual) {
+      hintCosteKmEl.innerHTML = `
+        Estás utilizando un coste completo por km que incluye mantenimiento, seguro, impuestos y depreciación.
+        Puedes modificarlo manualmente o ajustar el coste mensual del coche
+        <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${params.get("consumo") || ""}&precio=${params.get("precio") || ""}&ahorroCompra=${params.get("ahorroCompra") || ""}&desvio=${params.get("desvio") || ""}&return=supermercado">
+          aquí
+        </a>.
+      `;
+    }
 
-  function formatEuro(num) {
-    return num.toLocaleString("es-ES", {
-      style: "currency",
-      currency: "EUR",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+    if (toggleAdvancedEl && advancedBlockEl) {
+      toggleAdvancedEl.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const isHidden = advancedBlockEl.style.display === "none";
+        advancedBlockEl.style.display = isHidden ? "block" : "none";
+
+        toggleAdvancedEl.textContent = isHidden
+          ? "Ocultar coste completo del coche"
+          : "Usar coste completo del coche →";
+
+        if (hintCosteKmEl && !vieneDeCosteMensual) {
+          if (isHidden) {
+            hintCosteKmEl.innerHTML = `
+              Introduce aquí el coste total de tu coche por km, incluyendo mantenimiento, seguro o depreciación si quieres afinar el cálculo.
+              Si no lo sabes, puedes calcular el coste mensual real del coche
+              <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${consumoEl.value || ""}&precio=${precioEl.value || ""}&ahorroCompra=${ahorroCompraEl.value || ""}&desvio=${desvioEl.value || ""}&return=supermercado">
+                aquí
+              </a>.
+            `;
+          } else {
+            hintCosteKmEl.innerHTML = hintDefault;
+          }
+        }
+      });
+    }
+
+    if (vieneDeCosteMensual && advancedBlockEl) {
+      advancedBlockEl.style.display = "block";
+      if (toggleAdvancedEl) {
+        toggleAdvancedEl.textContent = "Ocultar coste completo del coche";
+      }
+    }
+
+    function formatEuro(num) {
+      return num.toLocaleString("es-ES", {
+        style: "currency",
+        currency: "EUR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatKm(num) {
+      return num.toLocaleString("es-ES", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      }) + " km";
+    }
+
+    function getValues() {
+      return {
+        ahorroCompra: parseFloat(ahorroCompraEl.value),
+        desvio: parseFloat(desvioEl.value),
+        consumo: parseFloat(consumoEl.value),
+        precio: parseFloat(precioEl.value),
+        extraKm: parseFloat(extraKmEl.value) || 0
+      };
+    }
+
+    function valuesAreValid(v) {
+      return [v.ahorroCompra, v.desvio, v.consumo, v.precio, v.extraKm].every(
+        n => !isNaN(n) && n >= 0
+      ) && v.consumo > 0 && v.precio > 0;
+    }
+
+    function calcularAutomatico() {
+      const v = getValues();
+
+      if (!valuesAreValid(v)) {
+        resultadoEl.className = "result bad";
+        resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
+        detalleEl.innerHTML = "";
+        accionesEl.innerHTML = "";
+        return;
+      }
+
+      const kmTotales = v.desvio * 2;
+      const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
+      const costeOtros = kmTotales * v.extraKm;
+      const costeRealDesplazamiento = costeCombustible + costeOtros;
+      const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
+
+      if (ahorroReal > 0.05) {
+        resultadoEl.className = "result ok";
+        resultadoEl.textContent = `Sí compensa. Ahorras aproximadamente ${formatEuro(ahorroReal)}.`;
+      } else if (ahorroReal < -0.05) {
+        resultadoEl.className = "result bad";
+        resultadoEl.textContent = `No compensa. Perderías aproximadamente ${formatEuro(Math.abs(ahorroReal))}.`;
+      } else {
+        resultadoEl.className = "result neutral";
+        resultadoEl.textContent = "Estás prácticamente en empate.";
+      }
+
+      const linkCosteKm =
+        `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}&ahorroCompra=${v.ahorroCompra}&desvio=${v.desvio}&return=supermercado`;
+
+      const linkCosteMensual =
+        `https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${v.consumo}&precio=${v.precio}&ahorroCompra=${v.ahorroCompra}&desvio=${v.desvio}&return=supermercado`;
+
+      const linkGasolina =
+        `https://dcsolanaprojects.github.io/calculadora-gasolina/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}&desvio=${v.desvio}`;
+
+      detalleEl.innerHTML = `
+        <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
+        <strong>Kilómetros extra totales:</strong> ${formatKm(kmTotales)}<br>
+        <strong>Coste combustible del desplazamiento:</strong> ${formatEuro(costeCombustible)}<br>
+        <strong>Otros costes del coche:</strong> ${v.extraKm > 0 ? formatEuro(costeOtros) : "no incluidos"}<br>
+        <strong>Coste real del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>
+        <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}<br><br>
+        <span class="calc-note">Este cálculo puede incluir el coste total del coche por km, no solo combustible, si has añadido otros costes.</span>
+      `;
+
+      accionesEl.innerHTML = `
+        <strong>Aprovecha este resultado</strong>
+        <a class="action-card" href="${linkCosteKm}">
+          <span>Ver coste real por km →</span>
+          <small>Revisa el coste por kilómetro usado en este cálculo.</small>
+        </a>
+        <a class="action-card" href="${linkCosteMensual}">
+          <span>Calcular coste mensual real del coche →</span>
+          <small>Estima cuánto te cuesta tener coche al mes y al año.</small>
+        </a>
+        <a class="action-card" href="${linkGasolina}">
+          <span>Calcular si compensa una gasolinera más barata →</span>
+          <small>Usa consumo, precio y coste completo por km en otra decisión de ahorro.</small>
+        </a>
+      `;
+    }
+
+    [ahorroCompraEl, desvioEl, consumoEl, precioEl, extraKmEl].forEach(input => {
+      input.addEventListener("input", calcularAutomatico);
     });
-  }
 
-  function formatKm(num) {
-    return num.toLocaleString("es-ES", {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1
-    }) + " km";
-  }
+    resetBtn.addEventListener("click", () => {
+      setTimeout(calcularAutomatico, 0);
+    });
 
-  function getValues() {
-    return {
-      ahorroCompra: parseFloat(ahorroCompraEl.value),
-      desvio: parseFloat(desvioEl.value),
-      consumo: parseFloat(consumoEl.value),
-      precio: parseFloat(precioEl.value),
-      extraKm: parseFloat(extraKmEl.value) || 0
-    };
-  }
-
-  function valuesAreValid(v) {
-    return [v.ahorroCompra, v.desvio, v.consumo, v.precio, v.extraKm].every(
-      n => !isNaN(n) && n >= 0
-    ) && v.consumo > 0 && v.precio > 0;
-  }
-
-  function calcularAutomatico() {
-    const v = getValues();
-
-    if (!valuesAreValid(v)) {
-      resultadoEl.className = "result bad";
-      resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
-      detalleEl.innerHTML = "";
-      accionesEl.innerHTML = "";
-      return;
-    }
-
-    const kmTotales = v.desvio * 2;
-    const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
-    const costeOtros = kmTotales * v.extraKm;
-const costeRealDesplazamiento = costeCombustible + costeOtros;
-    const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
-
-    if (ahorroReal > 0.05) {
-      resultadoEl.className = "result ok";
-      resultadoEl.textContent = `Sí compensa. Ahorras aproximadamente ${formatEuro(ahorroReal)}.`;
-    } else if (ahorroReal < -0.05) {
-      resultadoEl.className = "result bad";
-      resultadoEl.textContent = `No compensa. Perderías aproximadamente ${formatEuro(Math.abs(ahorroReal))}.`;
-    } else {
-      resultadoEl.className = "result neutral";
-      resultadoEl.textContent = "Estás prácticamente en empate.";
-    }
-
-    const linkCosteKm =
-  `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}&ahorroCompra=${v.ahorroCompra}&desvio=${v.desvio}&return=supermercado`;
-  const linkCosteMensual =
-    `https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${v.consumo}&precio=${v.precio}`;
-
-  const linkGasolina =
-    `https://dcsolanaprojects.github.io/calculadora-gasolina/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}`;
-
-  linkHintCosteKmEl.href = linkCosteKm;
-  detalleEl.innerHTML = `
-      <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
-      <strong>Kilómetros extra totales:</strong> ${formatKm(kmTotales)}<br>
-      <strong>Coste combustible del desplazamiento:</strong> ${formatEuro(costeCombustible)}<br>
-      <strong>Otros costes del coche:</strong> ${v.extraKm > 0 ? formatEuro(costeOtros) : "no incluidos"}<br>
-      <strong>Coste real del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>
-      <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}<br><br>
-<span class="calc-note">Este cálculo puede incluir el coste total del coche por km, no solo combustible, si has añadido otros costes.</span>
-      
-    `;
-
-    accionesEl.innerHTML = `
-      <strong>Aprovecha este resultado</strong>
-      <a class="action-card" href="${linkCosteKm}"><span>Ver coste real por km →</span><small>Ajusta el coste de desgaste/mantenimiento para afinar este cálculo.</small></a>
-      <a class="action-card" href="${linkCosteMensual}"><span>Calcular coste mensual del coche →</span><small>Estima cuánto te cuesta tener coche al mes y al año.</small></a>
-      <a class="action-card" href="${linkGasolina}"><span>Calcular si compensa una gasolinera más barata →</span><small>Usa consumo, precio y coste extra por km en otra decisión de ahorro.</small></a>
-    `;
-    if (accionesEl) {
-  accionesEl.innerHTML = `
-    <strong>Aprovecha este resultado</strong><br><br>
-
-    <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/">
-      Ver coste mensual real del coche →
-    </a><br>
-
-    <a href="https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}">
-      Ver coste por km →
-    </a><br>
-
-    <a href="https://dcsolanaprojects.github.io/calculadora-gasolina/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}&desvio=${v.desvio}">
-      Aplicar este coste a gasolina →
-    </a>
-  `;
-}
-  }
-
-  [ahorroCompraEl, desvioEl, consumoEl, precioEl, extraKmEl].forEach(input => {
-    input.addEventListener("input", calcularAutomatico);
-  });
-
-  resetBtn.addEventListener("click", () => {
-    setTimeout(calcularAutomatico, 0);
-  });
-
-  calcularAutomatico();
-</script>
+    calcularAutomatico();
+  </script>
 </body>
 </html>
