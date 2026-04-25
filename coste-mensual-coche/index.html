@@ -38,7 +38,10 @@
     .neutral { background: #e0e7ff; color: #3730a3; }
     .bad { background: #fee2e2; color: #991b1b; }
     .breakdown { margin-top: 12px; padding: 14px 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; color: #374151; font-size: 14px; line-height: 1.6; display: block; }
-
+.return-link {
+  margin-top: 10px;
+  font-size: 14px;
+}
     .action-box {
       margin-top: 20px;
       padding: 16px;
@@ -132,7 +135,8 @@
       <div class="buttons"><button type="reset" class="btn-reset" id="resetBtn">Reiniciar</button></div>
     </form>
     <div id="resultado" class="result neutral">Introduce tus datos para ver el resultado.</div>
-    <div id="detalle" class="breakdown"></div>
+<div id="volverLink" class="return-link"></div>
+<div id="detalle" class="breakdown"></div>
     <div id="insights" class="insight-box"></div>
     <div id="acciones" class="action-box"></div>
     <h2>¿Qué incluye esta calculadora?</h2>
@@ -159,7 +163,8 @@
     const depreciacionAnualEl = document.getElementById("depreciacionAnual");
     const financiacionAnualEl = document.getElementById("financiacionAnual");
     const resultadoEl = document.getElementById("resultado");
-    const detalleEl = document.getElementById("detalle");
+const volverLinkEl = document.getElementById("volverLink");
+const detalleEl = document.getElementById("detalle");
     const insightsEl = document.getElementById("insights");
     const accionesEl = document.getElementById("acciones");
     const resetBtn = document.getElementById("resetBtn");
@@ -177,8 +182,16 @@
     function trackEvent(eventName, params) { if (typeof gtag === "function") gtag("event", eventName, params || {}); }
     function calcularAutomatico() {
       const v = getValues();
-      if (!valuesAreValid(v)) { resultadoEl.className = "result bad"; resultadoEl.textContent = "Revisa los datos: introduce valores válidos."; detalleEl.innerHTML = ""; insightsEl.innerHTML = ""; accionesEl.innerHTML = ""; return; }
-      const litrosAnuales = (v.kmAnuales * v.consumo) / 100;
+      if (!valuesAreValid(v)) {
+  resultadoEl.className = "result bad";
+  resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
+  volverLinkEl.innerHTML = "";
+  detalleEl.innerHTML = "";
+  insightsEl.innerHTML = "";
+  accionesEl.innerHTML = "";
+  return;
+}
+const litrosAnuales = (v.kmAnuales * v.consumo) / 100;
       const combustibleAnual = litrosAnuales * v.precio;
       const costeFijoAnual = v.seguroAnual + v.mantenimientoAnual + v.otrosAnuales + v.depreciacionAnual + v.financiacionAnual;
       const totalAnual = combustibleAnual + costeFijoAnual;
@@ -211,8 +224,18 @@
 };
       const costeKmUrl = buildUrl("https://dcsolanaprojects.github.io/coste-km-coche/", commonParams);
       const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
-      const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
-      accionesEl.innerHTML = `<strong>Aprovecha este resultado</strong>
+const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
+
+if (volverLinkEl) {
+  volverLinkEl.innerHTML = "";
+}
+
+if (volverLinkEl && params.get("return") === "gasolina") {
+  volverLinkEl.innerHTML = `
+    <a href="${gasolinaUrl}">← Volver a gasolina con estos datos</a>
+  `;
+}
+accionesEl.innerHTML = `<strong>Aprovecha este resultado</strong>
         <a class="action-card" href="${costeKmUrl}" data-tool-link="coste-km"><span>Ver coste por kilómetro →</span><small>Usa el coste total y los costes no combustibles por km.</small></a>
         <a class="action-card" href="${gasolinaUrl}" data-tool-link="gasolina"><span>Ahorrar en gasolina con estos datos →</span><small>Comprueba si una gasolinera más barata compensa incluyendo el coste real del desvío.</small></a>
         <a class="action-card" href="${supermercadoUrl}" data-tool-link="supermercado"><span>Valorar otro supermercado con estos datos →</span><small>Calcula si el ahorro en la compra supera el coste real del desplazamiento.</small></a>`;
