@@ -176,6 +176,52 @@
       text-decoration: underline;
     }
 
+
+    .action-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .action-box strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    .action-card {
+      display: block;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      text-decoration: none;
+    }
+
+    .action-card:hover {
+      text-decoration: none;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .action-card span {
+      display: block;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .action-card small {
+      display: block;
+      margin-top: 4px;
+      color: #6b7280;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
     .footer-link {
       margin-top: 18px;
       font-size: 13px;
@@ -303,6 +349,8 @@
 
     <div id="detalle" class="breakdown"></div>
 
+    <div id="acciones" class="action-box"></div>
+
     <h2>¿Cuándo compensa ir a otro supermercado?</h2>
     <p>
       Compensa cuando el ahorro en la compra es mayor que el coste de desplazarte. Si el supermercado está lejos o el ahorro es pequeño, puede que no merezca la pena ir en coche.
@@ -331,6 +379,7 @@
   const linkHintCosteKmEl = document.getElementById("linkHintCosteKm");
   const resultadoEl = document.getElementById("resultado");
   const detalleEl = document.getElementById("detalle");
+  const accionesEl = document.getElementById("acciones");
   const resetBtn = document.getElementById("resetBtn");
 
   const params = new URLSearchParams(window.location.search);
@@ -402,6 +451,7 @@ setValueFromParam(extraKmEl, "extraCoste");
       resultadoEl.className = "result bad";
       resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
       detalleEl.innerHTML = "";
+      accionesEl.innerHTML = "";
       return;
     }
 
@@ -424,6 +474,12 @@ setValueFromParam(extraKmEl, "extraCoste");
 
     const linkCosteKm =
   `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}&ahorroCompra=${v.ahorroCompra}&desvio=${v.desvio}&return=supermercado`;
+  const linkCosteMensual =
+    `https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${v.consumo}&precio=${v.precio}`;
+
+  const linkGasolina =
+    `https://dcsolanaprojects.github.io/calculadora-gasolina/?consumo=${v.consumo}&precio=${v.precio}&extraCoste=${v.extraKm}`;
+
   linkHintCosteKmEl.href = linkCosteKm;
   detalleEl.innerHTML = `
       <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
@@ -433,6 +489,13 @@ setValueFromParam(extraKmEl, "extraCoste");
       <strong>Coste real del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>
       <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}
       
+    `;
+
+    accionesEl.innerHTML = `
+      <strong>Aprovecha este resultado</strong>
+      <a class="action-card" href="${linkCosteKm}"><span>Ver coste real por km →</span><small>Ajusta el coste de desgaste/mantenimiento para afinar este cálculo.</small></a>
+      <a class="action-card" href="${linkCosteMensual}"><span>Calcular coste mensual del coche →</span><small>Estima cuánto te cuesta tener coche al mes y al año.</small></a>
+      <a class="action-card" href="${linkGasolina}"><span>Calcular si compensa una gasolinera más barata →</span><small>Usa consumo, precio y coste extra por km en otra decisión de ahorro.</small></a>
     `;
   }
 
