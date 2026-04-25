@@ -195,7 +195,19 @@
       const ahorroMenos1000Km = costeKm * 1000;
       const ahorroDiesCentimos = litrosAnuales * 0.10;
       insightsEl.innerHTML = `<strong>Lectura rápida:</strong><br>Tu mayor partida es <strong>${maxPart.name}</strong>, con aproximadamente ${formatPercent(maxPartPercent)} del coste anual.<br>Reducir 1.000 km al año equivaldría a unos ${formatEuro(ahorroMenos1000Km)} de coste evitado.<br>Pagar 0,10 €/L menos en combustible supondría unos ${formatEuro(ahorroDiesCentimos)} al año.`;
-      const commonParams = { consumo: v.consumo, precio: v.precio, extraCoste: extraCosteKm.toFixed(4), costeKm: costeKm.toFixed(4), kmAnuales: v.kmAnuales };
+      const commonParams = {
+        consumo: v.consumo,
+        precio: v.precio,
+        extraCoste: extraCosteKm.toFixed(4),
+        costeKm: costeKm.toFixed(4),
+        kmAnuales: v.kmAnuales,
+        seguroAnual: v.seguroAnual,
+        mantenimientoAnual: v.mantenimientoAnual,
+        otrosAnuales: v.otrosAnuales,
+        depreciacionAnual: v.depreciacionAnual,
+        financiacionAnual: v.financiacionAnual,
+        return: "coste-mensual"
+      };
       const costeKmUrl = buildUrl("https://dcsolanaprojects.github.io/coste-km-coche/", commonParams);
       const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
       const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
