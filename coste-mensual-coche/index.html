@@ -37,7 +37,53 @@
     .result { margin-top: 24px; padding: 18px; border-radius: 12px; display: block; font-weight: 700; line-height: 1.45; }
     .neutral { background: #e0e7ff; color: #3730a3; }
     .bad { background: #fee2e2; color: #991b1b; }
-    .breakdown, .link-box { margin-top: 12px; padding: 14px 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; color: #374151; font-size: 14px; line-height: 1.6; display: block; }
+    .breakdown { margin-top: 12px; padding: 14px 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; color: #374151; font-size: 14px; line-height: 1.6; display: block; }
+
+    .action-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .action-box strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    .action-card {
+      display: block;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      text-decoration: none;
+    }
+
+    .action-card:hover {
+      text-decoration: none;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .action-card span {
+      display: block;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .action-card small {
+      display: block;
+      margin-top: 4px;
+      color: #6b7280;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
     .insight-box { margin-top: 12px; padding: 14px 16px; border-radius: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; font-size: 14px; line-height: 1.6; }
     a { color: #2563eb; font-weight: 600; text-decoration: none; }
     a:hover { text-decoration: underline; }
@@ -88,7 +134,7 @@
     <div id="resultado" class="result neutral">Introduce tus datos para ver el resultado.</div>
     <div id="detalle" class="breakdown"></div>
     <div id="insights" class="insight-box"></div>
-    <div id="acciones" class="link-box"></div>
+    <div id="acciones" class="action-box"></div>
     <h2>¿Qué incluye esta calculadora?</h2>
     <p>El coste real de un coche no es solo la gasolina. También hay que contar seguro, mantenimiento, impuestos, ITV, depreciación y, si existe, financiación. Por eso dos coches con el mismo consumo pueden tener costes mensuales muy diferentes.</p>
     <p>Esta calculadora sirve para hacer una estimación rápida y realista. No sustituye a una contabilidad exacta, pero ayuda a ver cuánto cuesta realmente tener coche y qué parte del gasto pesa más.</p>
@@ -145,7 +191,7 @@
       const maxPartPercent = totalAnual > 0 ? (maxPart.value / totalAnual) * 100 : 0;
       resultadoEl.className = "result neutral";
       resultadoEl.innerHTML = `Tu coche te cuesta aproximadamente <strong>${formatEuro(totalMensual)} al mes</strong>.<br><br>${formatEuro(totalAnual)} al año · ${formatNumber(costeKm)} €/km`;
-      detalleEl.innerHTML = `<strong>Combustible anual:</strong> ${formatEuro(combustibleAnual)} (${formatEuro(combustibleAnual / 12)} / mes)<br><strong>Seguro anual:</strong> ${formatEuro(v.seguroAnual)} (${formatEuro(v.seguroAnual / 12)} / mes)<br><strong>Mantenimiento anual:</strong> ${formatEuro(v.mantenimientoAnual)} (${formatEuro(v.mantenimientoAnual / 12)} / mes)<br><strong>Impuestos, ITV y otros:</strong> ${formatEuro(v.otrosAnuales)} (${formatEuro(v.otrosAnuales / 12)} / mes)<br><strong>Depreciación anual:</strong> ${formatEuro(v.depreciacionAnual)} (${formatEuro(v.depreciacionAnual / 12)} / mes)<br><strong>Financiación/intereses:</strong> ${v.financiacionAnual > 0 ? formatEuro(v.financiacionAnual) + " (" + formatEuro(v.financiacionAnual / 12) + " / mes)" : "no incluida"}<br><strong>Kilómetros mensuales aproximados:</strong> ${formatNumber(v.kmAnuales / 12)} km/mes`;
+      detalleEl.innerHTML = `<strong>Combustible anual:</strong> ${formatEuro(combustibleAnual)} (${formatEuro(combustibleAnual / 12)} / mes)<br><strong>Seguro anual:</strong> ${formatEuro(v.seguroAnual)} (${formatEuro(v.seguroAnual / 12)} / mes)<br><strong>Mantenimiento anual:</strong> ${formatEuro(v.mantenimientoAnual)} (${formatEuro(v.mantenimientoAnual / 12)} / mes)<br><strong>Impuestos, ITV y otros:</strong> ${formatEuro(v.otrosAnuales)} (${formatEuro(v.otrosAnuales / 12)} / mes)<br><strong>Depreciación anual:</strong> ${formatEuro(v.depreciacionAnual)} (${formatEuro(v.depreciacionAnual / 12)} / mes)<br><strong>Financiación/intereses:</strong> ${v.financiacionAnual > 0 ? formatEuro(v.financiacionAnual) + " (" + formatEuro(v.financiacionAnual / 12) + " / mes)" : "no incluida"}<br><strong>Kilómetros mensuales aproximados:</strong> ${formatNumber(v.kmAnuales / 12)} km/mes<br><br><strong>Coste por km:</strong><br>Combustible: ${formatNumber(costeCombustibleKm)} €/km<br>Otros costes: ${formatNumber(extraCosteKm)} €/km<br>Total: ${formatNumber(costeKm)} €/km`;
       const ahorroMenos1000Km = costeKm * 1000;
       const ahorroDiesCentimos = litrosAnuales * 0.10;
       insightsEl.innerHTML = `<strong>Lectura rápida:</strong><br>Tu mayor partida es <strong>${maxPart.name}</strong>, con aproximadamente ${formatPercent(maxPartPercent)} del coste anual.<br>Reducir 1.000 km al año equivaldría a unos ${formatEuro(ahorroMenos1000Km)} de coste evitado.<br>Pagar 0,10 €/L menos en combustible supondría unos ${formatEuro(ahorroDiesCentimos)} al año.`;
@@ -153,7 +199,10 @@
       const costeKmUrl = buildUrl("https://dcsolanaprojects.github.io/coste-km-coche/", commonParams);
       const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
       const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
-      accionesEl.innerHTML = `<strong>Usa estos datos en otras herramientas</strong><br><br><a href="${costeKmUrl}" data-tool-link="coste-km">Ver coste por kilómetro →</a><br><a href="${gasolinaUrl}" data-tool-link="gasolina">Calcular si compensa desviarte por gasolina →</a><br><a href="${supermercadoUrl}" data-tool-link="supermercado">Calcular si compensa ir a otro supermercado →</a>`;
+      accionesEl.innerHTML = `<strong>Aprovecha este resultado</strong>
+        <a class="action-card" href="${costeKmUrl}" data-tool-link="coste-km"><span>Ver coste por kilómetro →</span><small>Usa el coste total y los costes no combustibles por km.</small></a>
+        <a class="action-card" href="${gasolinaUrl}" data-tool-link="gasolina"><span>Ahorrar en gasolina con estos datos →</span><small>Comprueba si una gasolinera más barata compensa incluyendo el coste real del desvío.</small></a>
+        <a class="action-card" href="${supermercadoUrl}" data-tool-link="supermercado"><span>Valorar otro supermercado con estos datos →</span><small>Calcula si el ahorro en la compra supera el coste real del desplazamiento.</small></a>`;
       if (!hasTrackedCalculation) { trackEvent("calcular_coste_mensual", { coste_mensual: Number(totalMensual.toFixed(2)), coste_km: Number(costeKm.toFixed(4)) }); hasTrackedCalculation = true; }
     }
     [kmAnualesEl, consumoEl, precioEl, seguroAnualEl, mantenimientoAnualEl, otrosAnualesEl, depreciacionAnualEl, financiacionAnualEl].forEach(input => input.addEventListener("input", calcularAutomatico));
