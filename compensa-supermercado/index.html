@@ -271,7 +271,11 @@
           <label for="precio">Precio combustible (€/L)</label>
           <input type="number" id="precio" value="1.55" step="0.01" min="0" inputmode="decimal">
         </div>
-
+<div class="field">
+  <label for="extraKm">Desgaste/mantenimiento (€/km) opcional</label>
+  <input type="number" id="extraKm" placeholder="Ej: 0.05" step="0.01" min="0" inputmode="decimal">
+  <div class="hint">Si no lo sabes, puedes calcularlo con la herramienta de coste por km.</div>
+</div>
         
       </div>
 
@@ -379,7 +383,11 @@ const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
         resultadoEl.textContent = "Estás prácticamente en empate.";
       }
 
-      const linkCosteKm = `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&return=supermercado`;
+      const extraCosteParam = usaCosteRealKm
+  ? `&extraCoste=${(v.costeKm - ((v.consumo / 100) * v.precio)).toFixed(4)}`
+  : "";
+
+const linkCosteKm = `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}${extraCosteParam}&return=supermercado`;
 
 detalleEl.innerHTML = `
   <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
