@@ -6,7 +6,8 @@
 
   <title>¿Cuánto cuesta tu coche por km? Calcula el coste real</title>
   <meta name="description" content="Calcula el coste real por kilómetro de tu coche incluyendo combustible y desgaste. Descubre cuánto te cuesta cada trayecto.">
-<meta name="robots" content="index,follow" />
+  <meta name="robots" content="index,follow" />
+
   <link rel="canonical" href="https://dcsolanaprojects.github.io/coste-km-coche/" />
 
   <style>
@@ -45,21 +46,7 @@
       gap: 16px;
       margin-top: 20px;
     }
-.footer-link {
-  margin-top: 18px;
-  font-size: 13px;
-  color: #6b7280;
-  text-align: center;
-}
 
-.footer-link a {
-  color: #6b7280;
-  text-decoration: none;
-}
-
-.footer-link a:hover {
-  text-decoration: underline;
-}
     .full {
       grid-column: 1 / -1;
     }
@@ -101,6 +88,7 @@
       margin-top: 12px;
       font-size: 14px;
       color: #374151;
+      line-height: 1.6;
     }
 
     .link-box {
@@ -109,6 +97,7 @@
       border-radius: 10px;
       background: #f9fafb;
       border: 1px solid #e5e7eb;
+      line-height: 1.5;
     }
 
     a {
@@ -117,22 +106,45 @@
       font-weight: 600;
     }
 
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-link {
+      margin-top: 18px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .footer-link a {
+      color: #6b7280;
+      text-decoration: none;
+    }
+
+    .footer-link a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 600px) {
+      body { padding: 12px; }
+      .container { padding: 20px 16px; }
       .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 24px; }
     }
   </style>
+
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
     gtag('config', 'G-TXNSN93S5L', {
-  page_title: 'Coste por km',
-  page_path: '/coste-km-coche/'
-});
-</script>
+      page_title: 'Coste por km',
+      page_path: '/coste-km-coche/'
+    });
+  </script>
 </head>
 
 <body>
@@ -146,18 +158,18 @@
 
     <div class="grid">
       <div class="field">
-        <label>Consumo (L/100 km)</label>
-        <input id="consumo" type="number" value="6.5" step="0.1">
+        <label for="consumo">Consumo (L/100 km)</label>
+        <input id="consumo" type="number" value="6.5" step="0.1" min="0" inputmode="decimal">
       </div>
 
       <div class="field">
-        <label>Precio combustible (€/L)</label>
-        <input id="precio" type="number" value="1.55" step="0.01">
+        <label for="precio">Precio combustible (€/L)</label>
+        <input id="precio" type="number" value="1.55" step="0.01" min="0" inputmode="decimal">
       </div>
 
       <div class="field full">
-        <label>Coste por desgaste y mantenimiento (€/km) (opcional)</label>
-        <input id="extraCoste" type="number" step="0.01" placeholder="Ej: 0.05">
+        <label for="extraCoste">Coste por desgaste y mantenimiento (€/km) (opcional)</label>
+        <input id="extraCoste" type="number" step="0.01" min="0" placeholder="Ej: 0.05" inputmode="decimal">
         <div class="hint">Ejemplo: 0,03 – 0,10 €/km según el coche</div>
       </div>
     </div>
@@ -168,15 +180,11 @@
 
     <div id="detalle" class="breakdown"></div>
 
-    <div class="link-box">
-      Con este coste puedes calcular si te compensa desviarte:
-      <br><br>
-      <a href="https://dcsolanaprojects.github.io/calculadora-gasolina/">Ver calculadora de desvío →</a>
-    </div>
+    <div id="acciones" class="link-box"></div>
 
     <div class="footer-link">
-  <a href="https://dcsolanaprojects.github.io/">Ver todas las herramientas →</a>
-</div>
+      <a href="https://dcsolanaprojects.github.io/">Ver todas las herramientas →</a>
+    </div>
   </div>
 
   <script>
@@ -185,35 +193,97 @@
     const extraCosteEl = document.getElementById("extraCoste");
     const resultadoEl = document.getElementById("resultado");
     const detalleEl = document.getElementById("detalle");
+    const accionesEl = document.getElementById("acciones");
+
+    const params = new URLSearchParams(window.location.search);
+    const returnTo = params.get("return");
+
+    function setValueFromParam(input, paramName) {
+      const value = params.get(paramName);
+      if (value !== null && value !== "") {
+        input.value = value;
+      }
+    }
+
+    setValueFromParam(consumoEl, "consumo");
+    setValueFromParam(precioEl, "precio");
+
+    function formatEuro(num) {
+      return num.toLocaleString("es-ES", {
+        style: "currency",
+        currency: "EUR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatNumber(num) {
+      return num.toLocaleString("es-ES", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function buildUrl(baseUrl, data) {
+      const query = new URLSearchParams(data);
+      return `${baseUrl}?${query.toString()}`;
+    }
 
     function calcular() {
       const consumo = parseFloat(consumoEl.value);
       const precio = parseFloat(precioEl.value);
       const extra = parseFloat(extraCosteEl.value) || 0;
 
-      if (isNaN(consumo) || isNaN(precio) || consumo <= 0 || precio <= 0) {
+      if (isNaN(consumo) || isNaN(precio) || consumo <= 0 || precio <= 0 || extra < 0) {
         resultadoEl.textContent = "Introduce valores válidos.";
         detalleEl.textContent = "";
+        accionesEl.innerHTML = "";
         return;
       }
 
       const combustibleKm = (consumo / 100) * precio;
       const totalKm = combustibleKm + extra;
-
       const coste5km = totalKm * 5;
 
       resultadoEl.innerHTML = `
-        Tu coche te cuesta aproximadamente <strong>${totalKm.toFixed(2)} €/km</strong> en total.
+        Tu coche te cuesta aproximadamente <strong>${formatNumber(totalKm)} €/km</strong> en total.
         <br><br>
-        (${combustibleKm.toFixed(2)} € combustible + ${extra.toFixed(2)} € otros costes)
+        (${formatNumber(combustibleKm)} € combustible + ${formatNumber(extra)} € otros costes)
       `;
 
       detalleEl.innerHTML = `
-        10 km → ${(totalKm * 10).toFixed(2)} €<br>
-        50 km → ${(totalKm * 50).toFixed(2)} €<br>
-        100 km → ${(totalKm * 100).toFixed(2)} €<br><br>
-        Desviarte 5 km te cuesta aproximadamente ${coste5km.toFixed(2)} €
+        10 km → ${formatEuro(totalKm * 10)}<br>
+        50 km → ${formatEuro(totalKm * 50)}<br>
+        100 km → ${formatEuro(totalKm * 100)}<br><br>
+        Desviarte 5 km te cuesta aproximadamente ${formatEuro(coste5km)}.
       `;
+
+      const commonParams = {
+        consumo: consumo,
+        precio: precio,
+        costeKm: totalKm.toFixed(4)
+      };
+
+      const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
+      const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
+
+      if (returnTo === "gasolina") {
+        accionesEl.innerHTML = `
+          <strong>Usar este coste en la calculadora de gasolina</strong><br>
+          <a href="${gasolinaUrl}">Volver a calcular el desvío con este coste →</a>
+        `;
+      } else if (returnTo === "supermercado") {
+        accionesEl.innerHTML = `
+          <strong>Usar este coste en la calculadora de supermercado</strong><br>
+          <a href="${supermercadoUrl}">Volver a calcular la compra con este coste →</a>
+        `;
+      } else {
+        accionesEl.innerHTML = `
+          <strong>Usar este resultado en otra herramienta</strong><br><br>
+          <a href="${gasolinaUrl}">Calcular si compensa desviarte por gasolina →</a><br>
+          <a href="${supermercadoUrl}">Calcular si compensa ir a otro supermercado →</a>
+        `;
+      }
     }
 
     consumoEl.addEventListener("input", calcular);
