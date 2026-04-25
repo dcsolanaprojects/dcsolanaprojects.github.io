@@ -272,10 +272,7 @@
           <input type="number" id="precio" value="1.55" step="0.01" min="0" inputmode="decimal">
         </div>
 
-        <div class="field">
-          <label for="extraKm">Coste extra por km (opcional)</label>
-          <input type="number" id="extraKm" placeholder="Ej: 0.05" step="0.01" min="0" inputmode="decimal">
-        </div>
+        
       </div>
 
       <div class="buttons">
@@ -308,7 +305,6 @@
     const desvioEl = document.getElementById("desvio");
     const consumoEl = document.getElementById("consumo");
     const precioEl = document.getElementById("precio");
-    const extraKmEl = document.getElementById("extraKm");
     const resultadoEl = document.getElementById("resultado");
     const detalleEl = document.getElementById("detalle");
     const resetBtn = document.getElementById("resetBtn");
@@ -338,7 +334,6 @@ setValueFromParam(precioEl, "precio");
   desvio: parseFloat(desvioEl.value),
   consumo: parseFloat(consumoEl.value),
   precio: parseFloat(precioEl.value),
-  extraKm: parseFloat(extraKmEl.value) || 0,
   costeKm: parseFloat(params.get("costeKm"))
 };
     }
@@ -365,11 +360,11 @@ const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
 const usaCosteRealKm = !isNaN(v.costeKm) && v.costeKm > 0;
 const costeRealDesplazamiento = usaCosteRealKm
   ? kmTotales * v.costeKm
-  : costeCombustible + (kmTotales * v.extraKm);
+  : costeCombustible;
 
 const costeExtra = usaCosteRealKm
   ? Math.max(0, costeRealDesplazamiento - costeCombustible)
-  : kmTotales * v.extraKm;
+  : 0;
 
 const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
 
@@ -400,9 +395,9 @@ detalleEl.innerHTML = `
 `;
     }
 
-    [ahorroCompraEl, desvioEl, consumoEl, precioEl, extraKmEl].forEach(input => {
-      input.addEventListener("input", calcularAutomatico);
-    });
+    [ahorroCompraEl, desvioEl, consumoEl, precioEl].forEach(input => {
+  input.addEventListener("input", calcularAutomatico);
+});
 
     resetBtn.addEventListener("click", () => {
       setTimeout(calcularAutomatico, 0);
