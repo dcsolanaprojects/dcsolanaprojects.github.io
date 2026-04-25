@@ -205,10 +205,16 @@
       </div>
 
       <div class="field full">
-        <label for="extraCoste">Otros costes del coche (€/km) opcional</label>
+      <label for="extraCoste">Costes adicionales por km (opcional)</label>
 <input id="extraCoste" type="number" step="0.01" min="0" placeholder="Ej: 0.05" inputmode="decimal">
 <div class="hint">
-  Incluye mantenimiento, desgaste, seguro, impuestos, depreciación u otros costes no incluidos en el combustible.
+  Aquí puedes añadir mantenimiento, neumáticos, desgaste, seguro, impuestos o depreciación repartidos por km.
+  Si no lo sabes, déjalo vacío o calcula primero el coste mensual real del coche.
+</div>
+<div class="hint">
+  <a id="linkHintCosteMensual" href="https://dcsolanaprojects.github.io/coste-mensual-coche/">
+    Calcular esos costes anuales automáticamente →
+  </a>
 </div>
       </div>
     </div>
@@ -236,6 +242,7 @@
 
     const params = new URLSearchParams(window.location.search);
     const returnTo = params.get("return");
+    const linkHintCosteMensualEl = document.getElementById("linkHintCosteMensual");
 
     function setValueFromParam(input, paramName) {
       const value = params.get(paramName);
@@ -358,7 +365,9 @@ const commonParams = {
   extraCoste: extra.toFixed(4),
   costeKm: totalKm.toFixed(4)
 };
-
+if (linkHintCosteMensualEl) {
+  linkHintCosteMensualEl.href = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", commonParams);
+}
 [
   "kmAnuales",
   "seguroAnual",
