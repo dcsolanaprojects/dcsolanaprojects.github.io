@@ -312,7 +312,17 @@
     const resultadoEl = document.getElementById("resultado");
     const detalleEl = document.getElementById("detalle");
     const resetBtn = document.getElementById("resetBtn");
+const params = new URLSearchParams(window.location.search);
 
+function setValueFromParam(input, paramName) {
+  const value = params.get(paramName);
+  if (value !== null && value !== "") {
+    input.value = value;
+  }
+}
+
+setValueFromParam(consumoEl, "consumo");
+setValueFromParam(precioEl, "precio");
     function formatEuro(num) {
       return num.toLocaleString("es-ES", {
         style: "currency",
@@ -324,12 +334,13 @@
 
     function getValues() {
       return {
-        ahorroCompra: parseFloat(ahorroCompraEl.value),
-        desvio: parseFloat(desvioEl.value),
-        consumo: parseFloat(consumoEl.value),
-        precio: parseFloat(precioEl.value),
-        extraKm: parseFloat(extraKmEl.value) || 0
-      };
+  ahorroCompra: parseFloat(ahorroCompraEl.value),
+  desvio: parseFloat(desvioEl.value),
+  consumo: parseFloat(consumoEl.value),
+  precio: parseFloat(precioEl.value),
+  extraKm: parseFloat(extraKmEl.value) || 0,
+  costeKm: parseFloat(params.get("costeKm"))
+};
     }
 
     function valuesAreValid(v) {
@@ -349,10 +360,18 @@
       }
 
       const kmTotales = v.desvio * 2;
-      const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
-      const costeExtra = kmTotales * v.extraKm;
-      const costeDesplazamiento = costeCombustible + costeExtra;
-      const ahorroReal = v.ahorroCompra - costeDesplazamiento;
+const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
+
+const usaCosteRealKm = !isNaN(v.costeKm) && v.costeKm > 0;
+const costeRealDesplazamiento = usaCosteRealKm
+  ? kmTotales * v.costeKm
+  : costeCombustible + (kmTotales * v.extraKm);
+
+const costeExtra = usaCosteRealKm
+  ? Math.max(0, costeRealDesplazamiento - costeCombustible)
+  : kmTotales * v.extraKm;
+
+const ahorroReal = v.ahorroCompra - costeRealDesplazamiento;
 
       if (ahorroReal > 0.05) {
         resultadoEl.className = "result ok";
@@ -365,18 +384,20 @@
         resultadoEl.textContent = "Estás prácticamente en empate.";
       }
 
-      detalleEl.innerHTML = `
-        <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
-        <strong>Kilómetros extra totales:</strong> ${kmTotales.toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km<br>
-        <strong>Coste de combustible:</strong> ${formatEuro(costeCombustible)}<br>
-        <strong>Coste extra estimado:</strong> ${formatEuro(costeExtra)}<br>
-        <strong>Coste total del desplazamiento:</strong> ${formatEuro(costeDesplazamiento)}<br>
-        <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}
-        <br><br>
-        <div class="secondary-link">
-          <a href="https://dcsolanaprojects.github.io/coste-km-coche/">Calcula tu coste real por km →</a>
-        </div>
-      `;
+      const linkCosteKm = `https://dcsolanaprojects.github.io/coste-km-coche/?consumo=${v.consumo}&precio=${v.precio}&return=supermercado`;
+
+detalleEl.innerHTML = `
+  <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
+  <strong>Kilómetros extra totales:</strong> ${kmTotales.toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km<br>
+  <strong>Coste combustible del desplazamiento:</strong> ${formatEuro(costeCombustible)}<br>
+  <strong>Coste desgaste/mantenimiento:</strong> ${usaCosteRealKm || v.extraKm > 0 ? formatEuro(costeExtra) : "no incluido"}<br>
+  ${usaCosteRealKm ? `<strong>Coste real del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>` : `<strong>Coste total del desplazamiento:</strong> ${formatEuro(costeRealDesplazamiento)}<br>`}
+  <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}
+  <br><br>
+  <div class="secondary-link">
+    <a href="${linkCosteKm}">${usaCosteRealKm ? "Recalcular coste real por km →" : "Calcular coste real por km →"}</a>
+  </div>
+`;
     }
 
     [ahorroCompraEl, desvioEl, consumoEl, precioEl, extraKmEl].forEach(input => {
