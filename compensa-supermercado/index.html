@@ -312,6 +312,7 @@
     const resultadoEl = document.getElementById("resultado");
     const detalleEl = document.getElementById("detalle");
     const resetBtn = document.getElementById("resetBtn");
+    const extraKmEl = document.getElementById("extraKm");
 const params = new URLSearchParams(window.location.search);
 
 function setValueFromParam(input, paramName) {
@@ -417,7 +418,7 @@ detalleEl.innerHTML = `
 `;
     }
 
-    [ahorroCompraEl, desvioEl, consumoEl, precioEl].forEach(input => {
+    [ahorroCompraEl, desvioEl, consumoEl, precioEl, extraKmEl].forEach(input => {
   input.addEventListener("input", calcularAutomatico);
 });
 
