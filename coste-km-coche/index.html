@@ -259,12 +259,19 @@ setValueFromParam(extraCosteEl, "extraCoste");
         Desviarte 5 km te cuesta aproximadamente ${formatEuro(coste5km)}.
       `;
 
-      const commonParams = {
+const commonParams = {
   consumo: consumo,
   precio: precio,
   extraCoste: extra.toFixed(4),
   costeKm: totalKm.toFixed(4)
 };
+
+["desvio", "diferencia", "litros", "ahorroCompra"].forEach(param => {
+  const value = params.get(param);
+  if (value !== null && value !== "") {
+    commonParams[param] = value;
+  }
+});
 
       const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
       const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
