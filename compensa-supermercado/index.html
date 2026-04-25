@@ -339,10 +339,10 @@ setValueFromParam(precioEl, "precio");
     }
 
     function valuesAreValid(v) {
-      return [v.ahorroCompra, v.desvio, v.consumo, v.precio, v.extraKm].every(
-        n => !isNaN(n) && n >= 0
-      ) && v.consumo > 0 && v.precio > 0;
-    }
+  return [v.ahorroCompra, v.desvio, v.consumo, v.precio].every(
+    n => !isNaN(n) && n >= 0
+  ) && v.consumo > 0 && v.precio > 0;
+}
 
     function calcularAutomatico() {
       const v = getValues();
