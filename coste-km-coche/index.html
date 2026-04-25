@@ -303,7 +303,18 @@ const commonParams = {
   costeKm: totalKm.toFixed(4)
 };
 
-["desvio", "diferencia", "litros", "ahorroCompra"].forEach(param => {
+[
+  "kmAnuales",
+  "seguroAnual",
+  "mantenimientoAnual",
+  "otrosAnuales",
+  "depreciacionAnual",
+  "financiacionAnual",
+  "desvio",
+  "diferencia",
+  "litros",
+  "ahorroCompra"
+].forEach(param => {
   const value = params.get(param);
   if (value !== null && value !== "") {
     commonParams[param] = value;
@@ -312,10 +323,7 @@ const commonParams = {
 
       const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
       const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
-      const costeMensualUrl = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", {
-        consumo: consumo,
-        precio: precio
-      });
+      const costeMensualUrl = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", commonParams);
 
       if (returnTo === "gasolina") {
         accionesEl.innerHTML = `
