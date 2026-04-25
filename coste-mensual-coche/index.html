@@ -230,9 +230,19 @@ if (volverLinkEl) {
   volverLinkEl.innerHTML = "";
 }
 
+if (volverLinkEl) {
+  volverLinkEl.innerHTML = "";
+}
+
 if (volverLinkEl && params.get("return") === "gasolina") {
   volverLinkEl.innerHTML = `
     <a href="${gasolinaUrl}">← Volver a gasolina con estos datos</a>
+  `;
+}
+
+if (volverLinkEl && params.get("return") === "supermercado") {
+  volverLinkEl.innerHTML = `
+    <a href="${supermercadoUrl}">← Volver al supermercado con estos datos</a>
   `;
 }
 accionesEl.innerHTML = `<strong>Aprovecha este resultado</strong>
