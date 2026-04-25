@@ -205,9 +205,11 @@
       </div>
 
       <div class="field full">
-        <label for="extraCoste">Coste por desgaste y mantenimiento (€/km) (opcional)</label>
-        <input id="extraCoste" type="number" step="0.01" min="0" placeholder="Ej: 0.05" inputmode="decimal">
-        <div class="hint">Ejemplo: 0,03 – 0,10 €/km según el coche</div>
+        <label for="extraCoste">Otros costes del coche (€/km) opcional</label>
+<input id="extraCoste" type="number" step="0.01" min="0" placeholder="Ej: 0.05" inputmode="decimal">
+<div class="hint">
+  Incluye mantenimiento, desgaste, seguro, impuestos, depreciación u otros costes no incluidos en el combustible.
+</div>
       </div>
     </div>
 
@@ -267,6 +269,50 @@ setValueFromParam(extraCosteEl, "extraCoste");
       return `${baseUrl}?${query.toString()}`;
     }
 
+    function getAnnualParam(paramName) {
+  const value = parseFloat(params.get(paramName));
+  return !isNaN(value) && value >= 0 ? value : 0;
+}
+
+function hasMonthlyBreakdown() {
+  return params.get("kmAnuales") !== null;
+}
+
+function buildMonthlyBreakdownHtml(kmAnuales) {
+  if (!hasMonthlyBreakdown() || isNaN(kmAnuales) || kmAnuales <= 0) {
+    return "";
+  }
+
+  const seguroAnual = getAnnualParam("seguroAnual");
+  const mantenimientoAnual = getAnnualParam("mantenimientoAnual");
+  const otrosAnuales = getAnnualParam("otrosAnuales");
+  const depreciacionAnual = getAnnualParam("depreciacionAnual");
+  const financiacionAnual = getAnnualParam("financiacionAnual");
+
+  const totalOtrosAnual =
+    seguroAnual +
+    mantenimientoAnual +
+    otrosAnuales +
+    depreciacionAnual +
+    financiacionAnual;
+
+  if (totalOtrosAnual <= 0) {
+    return "";
+  }
+
+  return `
+    <br>
+    <strong>Desglose de otros costes recibido desde coste mensual:</strong><br>
+    Seguro: ${formatNumber(seguroAnual / kmAnuales)} €/km<br>
+    Mantenimiento: ${formatNumber(mantenimientoAnual / kmAnuales)} €/km<br>
+    Impuestos, ITV y otros: ${formatNumber(otrosAnuales / kmAnuales)} €/km<br>
+    Depreciación: ${formatNumber(depreciacionAnual / kmAnuales)} €/km<br>
+    Financiación/intereses: ${formatNumber(financiacionAnual / kmAnuales)} €/km<br>
+    <strong>Total otros costes:</strong> ${formatNumber(totalOtrosAnual / kmAnuales)} €/km<br>
+    <span class="hint">Si cambias manualmente “otros costes” aquí, cambias el coste agregado por km, pero no el desglose anual original.</span>
+  `;
+}
+
     function calcular() {
       const consumo = parseFloat(consumoEl.value);
       const precio = parseFloat(precioEl.value);
@@ -289,12 +335,22 @@ setValueFromParam(extraCosteEl, "extraCoste");
         (${formatNumber(combustibleKm)} € combustible + ${formatNumber(extra)} € otros costes)
       `;
 
-      detalleEl.innerHTML = `
-        10 km → ${formatEuro(totalKm * 10)}<br>
-        50 km → ${formatEuro(totalKm * 50)}<br>
-        100 km → ${formatEuro(totalKm * 100)}<br><br>
-        Desviarte 5 km te cuesta aproximadamente ${formatEuro(coste5km)}.
-      `;
+      const kmAnualesParam = parseFloat(params.get("kmAnuales"));
+const desgloseMensualHtml = buildMonthlyBreakdownHtml(kmAnualesParam);
+
+detalleEl.innerHTML = `
+  <strong>Coste por km:</strong><br>
+  Combustible: ${formatNumber(combustibleKm)} €/km<br>
+  Otros costes: ${formatNumber(extra)} €/km<br>
+  Total: ${formatNumber(totalKm)} €/km<br>
+  ${desgloseMensualHtml}
+  <br>
+  <strong>Ejemplos rápidos:</strong><br>
+  10 km → ${formatEuro(totalKm * 10)}<br>
+  50 km → ${formatEuro(totalKm * 50)}<br>
+  100 km → ${formatEuro(totalKm * 100)}<br><br>
+  Desviarte 5 km te cuesta aproximadamente ${formatEuro(coste5km)}.
+`;
 
 const commonParams = {
   consumo: consumo,
