@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¿Cuánto cuesta mantener un coche al mes? Calculadora real</title>
+  <meta name="description" content="Calcula cuánto cuesta tener un coche al mes en España incluyendo gasolina, seguro, mantenimiento, impuestos y depreciación. Estima el coste real anual y por kilómetro.">
+  <meta name="robots" content="index,follow" />
+  <meta name="author" content="Daniel Cabrera" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="¿Cuánto cuesta mantener un coche al mes?" />
+  <meta property="og:description" content="Calcula el coste mensual real de tu coche incluyendo gasolina, seguro, mantenimiento, impuestos y depreciación." />
+  <meta property="og:locale" content="es_ES" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Calculadora de coste mensual de coche" />
+  <meta name="twitter:description" content="Descubre cuánto te cuesta realmente tener coche al mes, al año y por kilómetro." />
+  <link rel="canonical" href="https://dcsolanaprojects.github.io/coste-mensual-coche/" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f3f4f6; color: #111827; padding: 20px; }
+    .container { max-width: 720px; margin: auto; background: #ffffff; padding: 28px; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+    h1 { margin-top: 0; margin-bottom: 14px; font-size: 28px; letter-spacing: -0.5px; line-height: 1.15; color: #0f172a; }
+    h2 { margin-top: 22px; margin-bottom: 8px; font-size: 17px; line-height: 1.25; color: #0f172a; }
+    p { margin: 6px 0; color: #4b5563; line-height: 1.5; }
+    .lead { font-weight: 700; color: #111827; }
+    .intro { color: #4b5563; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+    .field { display: flex; flex-direction: column; }
+    label { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+    input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 16px; background: #f9fafb; color: #111827; transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease; }
+    input:focus { outline: none; border-color: #2563eb; background: #ffffff; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    .hint { font-size: 12px; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+    .buttons { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    button { padding: 14px 18px; border-radius: 10px; font-size: 16px; cursor: pointer; border: none; }
+    .btn-reset { background: #e5e7eb; color: #111827; font-weight: 600; }
+    .btn-reset:hover { background: #d1d5db; }
+    .result { margin-top: 24px; padding: 18px; border-radius: 12px; display: block; font-weight: 700; line-height: 1.45; }
+    .neutral { background: #e0e7ff; color: #3730a3; }
+    .bad { background: #fee2e2; color: #991b1b; }
+    .breakdown, .link-box { margin-top: 12px; padding: 14px 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; color: #374151; font-size: 14px; line-height: 1.6; display: block; }
+    .insight-box { margin-top: 12px; padding: 14px 16px; border-radius: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; font-size: 14px; line-height: 1.6; }
+    a { color: #2563eb; font-weight: 600; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .faq-block { margin-top: 22px; padding: 14px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; }
+    .faq-block h2 { margin-top: 0; margin-bottom: 10px; }
+    .faq-item { border-top: 1px solid #e5e7eb; padding: 8px 0; }
+    .faq-item:first-of-type { border-top: none; padding-top: 0; }
+    .faq-item summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-question { font-size: 16px; font-weight: 700; color: #111827; line-height: 1.35; flex: 1; }
+    .faq-icon { width: 20px; height: 20px; min-width: 20px; border-radius: 50%; background: #e5e7eb; position: relative; flex-shrink: 0; }
+    .faq-icon::before, .faq-icon::after { content: ""; position: absolute; background: #6b7280; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+    .faq-icon::before { width: 10px; height: 2px; }
+    .faq-icon::after { width: 2px; height: 10px; }
+    .faq-item[open] .faq-icon::after { display: none; }
+    .faq-item p { margin: 8px 0 0; color: #374151; line-height: 1.55; }
+    .footer-link { margin-top: 18px; font-size: 13px; color: #6b7280; text-align: center; }
+    .footer-link a { color: #6b7280; text-decoration: none; }
+    .footer-link a:hover { text-decoration: underline; }
+    @media (max-width: 600px) { body { padding: 12px; } .container { padding: 20px 16px; border-radius: 12px; } h1 { font-size: 24px; line-height: 1.15; } p { font-size: 16px; line-height: 1.6; } .grid { grid-template-columns: 1fr; gap: 14px; } .buttons { flex-direction: column; } button { width: 100%; } .faq-question { font-size: 15px; } .faq-item p { font-size: 15px; } }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TXNSN93S5L', { page_title: 'Coste mensual coche', page_path: '/coste-mensual-coche/' });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>¿Cuánto cuesta mantener un coche al mes?</h1>
+    <p class="lead">Calcula el coste real mensual de tener coche, no solo lo que gastas en gasolina.</p>
+    <p class="intro">Introduce tus kilómetros, consumo, seguro, mantenimiento, impuestos y depreciación para estimar cuánto te cuesta tu coche al mes, al año y por kilómetro.</p>
+    <form id="form">
+      <div class="grid">
+        <div class="field"><label for="kmAnuales">Kilómetros al año</label><input type="number" id="kmAnuales" value="12000" step="500" min="0" inputmode="decimal"><div class="hint">En seguros y mantenimientos suele estimarse en km/año.</div></div>
+        <div class="field"><label for="consumo">Consumo (L/100 km)</label><input type="number" id="consumo" value="6.5" step="0.1" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="precio">Precio combustible (€/L)</label><input type="number" id="precio" value="1.55" step="0.01" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="seguroAnual">Seguro anual (€)</label><input type="number" id="seguroAnual" value="500" step="10" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="mantenimientoAnual">Mantenimiento anual (€)</label><input type="number" id="mantenimientoAnual" value="400" step="10" min="0" inputmode="decimal"><div class="hint">Revisiones, neumáticos, averías medias, aceite, frenos...</div></div>
+        <div class="field"><label for="otrosAnuales">Impuestos, ITV y otros (€ / año)</label><input type="number" id="otrosAnuales" value="150" step="10" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="depreciacionAnual">Depreciación anual (€)</label><input type="number" id="depreciacionAnual" value="1500" step="50" min="0" inputmode="decimal"><div class="hint">Pérdida de valor estimada cada año.</div></div>
+        <div class="field"><label for="financiacionAnual">Financiación/intereses (€ / año) opcional</label><input type="number" id="financiacionAnual" placeholder="Ej: 300" step="10" min="0" inputmode="decimal"></div>
+      </div>
+      <div class="buttons"><button type="reset" class="btn-reset" id="resetBtn">Reiniciar</button></div>
+    </form>
+    <div id="resultado" class="result neutral">Introduce tus datos para ver el resultado.</div>
+    <div id="detalle" class="breakdown"></div>
+    <div id="insights" class="insight-box"></div>
+    <div id="acciones" class="link-box"></div>
+    <h2>¿Qué incluye esta calculadora?</h2>
+    <p>El coste real de un coche no es solo la gasolina. También hay que contar seguro, mantenimiento, impuestos, ITV, depreciación y, si existe, financiación. Por eso dos coches con el mismo consumo pueden tener costes mensuales muy diferentes.</p>
+    <p>Esta calculadora sirve para hacer una estimación rápida y realista. No sustituye a una contabilidad exacta, pero ayuda a ver cuánto cuesta realmente tener coche y qué parte del gasto pesa más.</p>
+    <h2>Cómo interpretar el resultado</h2>
+    <p>El coste mensual te permite comparar el coche con otros gastos fijos. El coste anual ayuda a ver el impacto total en tu presupuesto. El coste por kilómetro sirve para valorar trayectos concretos, desvíos a gasolineras más baratas o desplazamientos para ahorrar en la compra.</p>
+    <div class="faq-block">
+      <h2>Preguntas frecuentes</h2>
+      <details class="faq-item"><summary><span class="faq-question">¿Cuánto cuesta mantener un coche al mes en España?</span><span class="faq-icon"></span></summary><p>Depende mucho del uso, el seguro, el tipo de coche y la depreciación. Para muchos coches particulares, el coste real puede ser bastante superior al gasto mensual de gasolina si se incluyen seguro, mantenimiento e impuestos.</p></details>
+      <details class="faq-item"><summary><span class="faq-question">¿Por qué incluir la depreciación?</span><span class="faq-icon"></span></summary><p>Porque aunque no la pagues cada mes, tu coche pierde valor con el tiempo. Si compras un coche por una cantidad y años después lo vendes por menos, esa diferencia también forma parte del coste real de tener coche.</p></details>
+      <details class="faq-item"><summary><span class="faq-question">¿Es mejor calcular kilómetros al mes o al año?</span><span class="faq-icon"></span></summary><p>Para el uso del coche suele ser más práctico introducir kilómetros al año, porque seguros, mantenimientos e ITV se suelen pensar en términos anuales. El resultado mensual es más útil para entender el impacto en tu presupuesto.</p></details>
+      <details class="faq-item"><summary><span class="faq-question">¿Esta calculadora sirve para comparar coches?</span><span class="faq-icon"></span></summary><p>Sí. Puedes cambiar consumo, seguro, mantenimiento y depreciación para comparar dos coches distintos y ver cuál tiene un coste mensual más bajo, más allá del precio de compra.</p></details>
+    </div>
+    <div class="footer-link"><a href="https://dcsolanaprojects.github.io/">Ver todas las herramientas →</a></div>
+  </div>
+  <script>
+    const kmAnualesEl = document.getElementById("kmAnuales");
+    const consumoEl = document.getElementById("consumo");
+    const precioEl = document.getElementById("precio");
+    const seguroAnualEl = document.getElementById("seguroAnual");
+    const mantenimientoAnualEl = document.getElementById("mantenimientoAnual");
+    const otrosAnualesEl = document.getElementById("otrosAnuales");
+    const depreciacionAnualEl = document.getElementById("depreciacionAnual");
+    const financiacionAnualEl = document.getElementById("financiacionAnual");
+    const resultadoEl = document.getElementById("resultado");
+    const detalleEl = document.getElementById("detalle");
+    const insightsEl = document.getElementById("insights");
+    const accionesEl = document.getElementById("acciones");
+    const resetBtn = document.getElementById("resetBtn");
+    const params = new URLSearchParams(window.location.search);
+    function setValueFromParam(input, paramName) { const value = params.get(paramName); if (value !== null && value !== "") input.value = value; }
+    setValueFromParam(kmAnualesEl, "kmAnuales"); setValueFromParam(consumoEl, "consumo"); setValueFromParam(precioEl, "precio"); setValueFromParam(seguroAnualEl, "seguroAnual"); setValueFromParam(mantenimientoAnualEl, "mantenimientoAnual"); setValueFromParam(otrosAnualesEl, "otrosAnuales"); setValueFromParam(depreciacionAnualEl, "depreciacionAnual"); setValueFromParam(financiacionAnualEl, "financiacionAnual");
+    function formatEuro(num) { return num.toLocaleString("es-ES", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function formatNumber(num) { return num.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function formatPercent(num) { return num.toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + "%"; }
+    function buildUrl(baseUrl, data) { const query = new URLSearchParams(data); return `${baseUrl}?${query.toString()}`; }
+    function getValues() { return { kmAnuales: parseFloat(kmAnualesEl.value), consumo: parseFloat(consumoEl.value), precio: parseFloat(precioEl.value), seguroAnual: parseFloat(seguroAnualEl.value) || 0, mantenimientoAnual: parseFloat(mantenimientoAnualEl.value) || 0, otrosAnuales: parseFloat(otrosAnualesEl.value) || 0, depreciacionAnual: parseFloat(depreciacionAnualEl.value) || 0, financiacionAnual: parseFloat(financiacionAnualEl.value) || 0 }; }
+    function valuesAreValid(v) { return [v.kmAnuales, v.consumo, v.precio, v.seguroAnual, v.mantenimientoAnual, v.otrosAnuales, v.depreciacionAnual, v.financiacionAnual].every(n => !isNaN(n) && n >= 0) && v.kmAnuales > 0 && v.consumo > 0 && v.precio > 0; }
+    function getMaxPart(parts) { return parts.reduce((max, part) => part.value > max.value ? part : max, parts[0]); }
+    let hasTrackedCalculation = false;
+    function trackEvent(eventName, params) { if (typeof gtag === "function") gtag("event", eventName, params || {}); }
+    function calcularAutomatico() {
+      const v = getValues();
+      if (!valuesAreValid(v)) { resultadoEl.className = "result bad"; resultadoEl.textContent = "Revisa los datos: introduce valores válidos."; detalleEl.innerHTML = ""; insightsEl.innerHTML = ""; accionesEl.innerHTML = ""; return; }
+      const litrosAnuales = (v.kmAnuales * v.consumo) / 100;
+      const combustibleAnual = litrosAnuales * v.precio;
+      const costeFijoAnual = v.seguroAnual + v.mantenimientoAnual + v.otrosAnuales + v.depreciacionAnual + v.financiacionAnual;
+      const totalAnual = combustibleAnual + costeFijoAnual;
+      const totalMensual = totalAnual / 12;
+      const costeKm = totalAnual / v.kmAnuales;
+      const costeCombustibleKm = combustibleAnual / v.kmAnuales;
+      const extraCosteKm = Math.max(0, costeKm - costeCombustibleKm);
+      const parts = [{ name: "combustible", value: combustibleAnual }, { name: "seguro", value: v.seguroAnual }, { name: "mantenimiento", value: v.mantenimientoAnual }, { name: "impuestos/ITV/otros", value: v.otrosAnuales }, { name: "depreciación", value: v.depreciacionAnual }, { name: "financiación", value: v.financiacionAnual }];
+      const maxPart = getMaxPart(parts);
+      const maxPartPercent = totalAnual > 0 ? (maxPart.value / totalAnual) * 100 : 0;
+      resultadoEl.className = "result neutral";
+      resultadoEl.innerHTML = `Tu coche te cuesta aproximadamente <strong>${formatEuro(totalMensual)} al mes</strong>.<br><br>${formatEuro(totalAnual)} al año · ${formatNumber(costeKm)} €/km`;
+      detalleEl.innerHTML = `<strong>Combustible anual:</strong> ${formatEuro(combustibleAnual)} (${formatEuro(combustibleAnual / 12)} / mes)<br><strong>Seguro anual:</strong> ${formatEuro(v.seguroAnual)} (${formatEuro(v.seguroAnual / 12)} / mes)<br><strong>Mantenimiento anual:</strong> ${formatEuro(v.mantenimientoAnual)} (${formatEuro(v.mantenimientoAnual / 12)} / mes)<br><strong>Impuestos, ITV y otros:</strong> ${formatEuro(v.otrosAnuales)} (${formatEuro(v.otrosAnuales / 12)} / mes)<br><strong>Depreciación anual:</strong> ${formatEuro(v.depreciacionAnual)} (${formatEuro(v.depreciacionAnual / 12)} / mes)<br><strong>Financiación/intereses:</strong> ${v.financiacionAnual > 0 ? formatEuro(v.financiacionAnual) + " (" + formatEuro(v.financiacionAnual / 12) + " / mes)" : "no incluida"}<br><strong>Kilómetros mensuales aproximados:</strong> ${formatNumber(v.kmAnuales / 12)} km/mes`;
+      const ahorroMenos1000Km = costeKm * 1000;
+      const ahorroDiesCentimos = litrosAnuales * 0.10;
+      insightsEl.innerHTML = `<strong>Lectura rápida:</strong><br>Tu mayor partida es <strong>${maxPart.name}</strong>, con aproximadamente ${formatPercent(maxPartPercent)} del coste anual.<br>Reducir 1.000 km al año equivaldría a unos ${formatEuro(ahorroMenos1000Km)} de coste evitado.<br>Pagar 0,10 €/L menos en combustible supondría unos ${formatEuro(ahorroDiesCentimos)} al año.`;
+      const commonParams = { consumo: v.consumo, precio: v.precio, extraCoste: extraCosteKm.toFixed(4), costeKm: costeKm.toFixed(4), kmAnuales: v.kmAnuales };
+      const costeKmUrl = buildUrl("https://dcsolanaprojects.github.io/coste-km-coche/", commonParams);
+      const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
+      const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
+      accionesEl.innerHTML = `<strong>Usa estos datos en otras herramientas</strong><br><br><a href="${costeKmUrl}" data-tool-link="coste-km">Ver coste por kilómetro →</a><br><a href="${gasolinaUrl}" data-tool-link="gasolina">Calcular si compensa desviarte por gasolina →</a><br><a href="${supermercadoUrl}" data-tool-link="supermercado">Calcular si compensa ir a otro supermercado →</a>`;
+      if (!hasTrackedCalculation) { trackEvent("calcular_coste_mensual", { coste_mensual: Number(totalMensual.toFixed(2)), coste_km: Number(costeKm.toFixed(4)) }); hasTrackedCalculation = true; }
+    }
+    [kmAnualesEl, consumoEl, precioEl, seguroAnualEl, mantenimientoAnualEl, otrosAnualesEl, depreciacionAnualEl, financiacionAnualEl].forEach(input => input.addEventListener("input", calcularAutomatico));
+    accionesEl.addEventListener("click", function(event) { const link = event.target.closest("a[data-tool-link]"); if (!link) return; trackEvent("click_herramienta_relacionada", { herramienta_destino: link.getAttribute("data-tool-link"), origen: "coste_mensual_coche" }); });
+    resetBtn.addEventListener("click", () => { setTimeout(calcularAutomatico, 0); });
+    calcularAutomatico();
+  </script>
+</body>
+</html>
