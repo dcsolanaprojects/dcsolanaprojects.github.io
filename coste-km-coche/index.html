@@ -182,6 +182,11 @@
 
     <div id="acciones" class="link-box"></div>
 
+    <div class="link-box">
+      <strong>También puedes calcular</strong><br>
+      <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/">Cuánto cuesta mantener tu coche al mes →</a>
+    </div>
+
     <div class="footer-link">
       <a href="https://dcsolanaprojects.github.io/">Ver todas las herramientas →</a>
     </div>
@@ -289,6 +294,7 @@ const commonParams = {
       } else {
         accionesEl.innerHTML = `
           <strong>Usar este resultado en otra herramienta</strong><br><br>
+          <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${consumo}&precio=${precio}&extraCoste=${extra.toFixed(4)}">Calcular el coste mensual real del coche →</a><br>
           <a href="${gasolinaUrl}">Calcular si compensa desviarte por gasolina →</a><br>
           <a href="${supermercadoUrl}">Calcular si compensa ir a otro supermercado →</a>
         `;
