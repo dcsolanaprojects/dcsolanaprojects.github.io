@@ -222,6 +222,13 @@ const litrosAnuales = (v.kmAnuales * v.consumo) / 100;
   origen: "coste-mensual",
   return: "coste-mensual"
 };
+
+["desvio", "diferencia", "litros", "ahorroCompra"].forEach(param => {
+  const value = params.get(param);
+  if (value !== null && value !== "") {
+    commonParams[param] = value;
+  }
+});
       const costeKmUrl = buildUrl("https://dcsolanaprojects.github.io/coste-km-coche/", commonParams);
       const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
 const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
