@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>¿Compensa ir a otro supermercado? Calcula el ahorro real</title>
+  <meta name="description" content="Calcula si merece la pena ir a otro supermercado más barato teniendo en cuenta el ahorro en la compra, el desvío, el consumo y el coste del combustible.">
+  <meta name="robots" content="index,follow" />
+
+  <link rel="canonical" href="https://dcsolanaprojects.github.io/compensa-supermercado/" />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: #ffffff;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 28px;
+      line-height: 1.15;
+      color: #0f172a;
+    }
+
+    h2 {
+      margin-top: 22px;
+      margin-bottom: 8px;
+      font-size: 17px;
+      line-height: 1.25;
+      color: #0f172a;
+    }
+
+    p {
+      margin: 6px 0;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .lead {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .intro {
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      font-size: 16px;
+      background: #f9fafb;
+      color: #111827;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-reset {
+      background: #e5e7eb;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .btn-reset:hover {
+      background: #d1d5db;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .ok {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .bad {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .neutral {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .breakdown {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fafafa;
+      color: #374151;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .secondary-link {
+      margin-top: 10px;
+    }
+
+    .secondary-link a {
+      color: #2563eb;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .secondary-link a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-link {
+      margin-top: 18px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .footer-link a {
+      color: #6b7280;
+      text-decoration: none;
+    }
+
+    .footer-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+
+      .container {
+        padding: 20px 16px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 24px;
+        line-height: 1.15;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-TXNSN93S5L', {
+      page_title: 'Compensa supermercado',
+      page_path: '/compensa-supermercado/'
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>¿Compensa ir a otro supermercado?</h1>
+
+    <p class="lead">
+      Calcula si el ahorro de la compra compensa el desplazamiento en coche.
+    </p>
+
+    <p class="intro">
+      Si vas a un supermercado más barato pero tienes que hacer kilómetros extra, parte del ahorro puede desaparecer.
+    </p>
+
+    <form id="form">
+      <div class="grid">
+        <div class="field full">
+          <label for="ahorroCompra">Ahorro estimado en la compra (€)</label>
+          <input type="number" id="ahorroCompra" value="5" step="0.1" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="desvio">Desvío solo ida (km)</label>
+          <input type="number" id="desvio" value="3" step="0.1" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="consumo">Consumo (L/100 km)</label>
+          <input type="number" id="consumo" value="6.5" step="0.1" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="precio">Precio combustible (€/L)</label>
+          <input type="number" id="precio" value="1.55" step="0.01" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="extraKm">Coste extra por km (opcional)</label>
+          <input type="number" id="extraKm" placeholder="Ej: 0.05" step="0.01" min="0" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="reset" class="btn-reset" id="resetBtn">Reiniciar</button>
+      </div>
+    </form>
+
+    <div id="resultado" class="result neutral">
+      Introduce tus datos para ver el resultado.
+    </div>
+
+    <div id="detalle" class="breakdown"></div>
+
+    <h2>¿Cuándo compensa ir a otro supermercado?</h2>
+    <p>
+      Compensa cuando el ahorro en la compra es mayor que el coste de desplazarte. Si el supermercado está lejos o el ahorro es pequeño, puede que no merezca la pena ir en coche.
+    </p>
+
+    <p>
+      Esta calculadora no compara catálogos ni precios producto a producto: sirve para hacer una estimación rápida cuando ya tienes una idea aproximada de cuánto puedes ahorrar.
+    </p>
+
+    <div class="footer-link">
+      <a href="https://dcsolanaprojects.github.io/">Ver todas las herramientas →</a>
+    </div>
+  </div>
+
+  <script>
+    const ahorroCompraEl = document.getElementById("ahorroCompra");
+    const desvioEl = document.getElementById("desvio");
+    const consumoEl = document.getElementById("consumo");
+    const precioEl = document.getElementById("precio");
+    const extraKmEl = document.getElementById("extraKm");
+    const resultadoEl = document.getElementById("resultado");
+    const detalleEl = document.getElementById("detalle");
+    const resetBtn = document.getElementById("resetBtn");
+
+    function formatEuro(num) {
+      return num.toLocaleString("es-ES", {
+        style: "currency",
+        currency: "EUR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function getValues() {
+      return {
+        ahorroCompra: parseFloat(ahorroCompraEl.value),
+        desvio: parseFloat(desvioEl.value),
+        consumo: parseFloat(consumoEl.value),
+        precio: parseFloat(precioEl.value),
+        extraKm: parseFloat(extraKmEl.value) || 0
+      };
+    }
+
+    function valuesAreValid(v) {
+      return [v.ahorroCompra, v.desvio, v.consumo, v.precio, v.extraKm].every(
+        n => !isNaN(n) && n >= 0
+      ) && v.consumo > 0 && v.precio > 0;
+    }
+
+    function calcularAutomatico() {
+      const v = getValues();
+
+      if (!valuesAreValid(v)) {
+        resultadoEl.className = "result bad";
+        resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
+        detalleEl.innerHTML = "";
+        return;
+      }
+
+      const kmTotales = v.desvio * 2;
+      const costeCombustible = (kmTotales * v.consumo / 100) * v.precio;
+      const costeExtra = kmTotales * v.extraKm;
+      const costeDesplazamiento = costeCombustible + costeExtra;
+      const ahorroReal = v.ahorroCompra - costeDesplazamiento;
+
+      if (ahorroReal > 0.05) {
+        resultadoEl.className = "result ok";
+        resultadoEl.textContent = `Sí compensa. Ahorras aproximadamente ${formatEuro(ahorroReal)}.`;
+      } else if (ahorroReal < -0.05) {
+        resultadoEl.className = "result bad";
+        resultadoEl.textContent = `No compensa. Perderías aproximadamente ${formatEuro(Math.abs(ahorroReal))}.`;
+      } else {
+        resultadoEl.className = "result neutral";
+        resultadoEl.textContent = "Estás prácticamente en empate.";
+      }
+
+      detalleEl.innerHTML = `
+        <strong>Ahorro estimado en la compra:</strong> ${formatEuro(v.ahorroCompra)}<br>
+        <strong>Kilómetros extra totales:</strong> ${kmTotales.toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km<br>
+        <strong>Coste de combustible:</strong> ${formatEuro(costeCombustible)}<br>
+        <strong>Coste extra estimado:</strong> ${formatEuro(costeExtra)}<br>
+        <strong>Coste total del desplazamiento:</strong> ${formatEuro(costeDesplazamiento)}<br>
+        <strong>Ahorro real:</strong> ${formatEuro(ahorroReal)}
+        <br><br>
+        <div class="secondary-link">
+          <a href="https://dcsolanaprojects.github.io/coste-km-coche/">Calcula tu coste real por km →</a>
+        </div>
+      `;
+    }
+
+    [ahorroCompraEl, desvioEl, consumoEl, precioEl, extraKmEl].forEach(input => {
+      input.addEventListener("input", calcularAutomatico);
+    });
+
+    resetBtn.addEventListener("click", () => {
+      setTimeout(calcularAutomatico, 0);
+    });
+
+    calcularAutomatico();
+  </script>
+</body>
+</html>
