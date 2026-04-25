@@ -440,10 +440,7 @@
       hintCosteKmEl.innerHTML = `
         Estás utilizando un coste completo por km que incluye mantenimiento, seguro, impuestos y depreciación.
         Puedes modificarlo manualmente o ajustar el coste mensual del coche
-        <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${params.get("consumo") || ""}&precio=${params.get("precio") || ""}&ahorroCompra=${params.get("ahorroCompra") || ""}&desvio=${params.get("desvio") || ""}&return=supermercado">
-          aquí
-        </a>.
-      `;
+        <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${params.get("consumo") || ""}&precio=${params.get("precio") || ""}&ahorroCompra=${params.get("ahorroCompra") || ""}&desvio=${params.get("desvio") || ""}&return=supermercado">aquí</a>.`;
     }
 
     if (toggleAdvancedEl && advancedBlockEl) {
@@ -462,10 +459,7 @@
             hintCosteKmEl.innerHTML = `
               Introduce aquí el coste total de tu coche por km, incluyendo mantenimiento, seguro o depreciación si quieres afinar el cálculo.
               Si no lo sabes, puedes calcular el coste mensual real del coche
-              <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${consumoEl.value || ""}&precio=${precioEl.value || ""}&ahorroCompra=${ahorroCompraEl.value || ""}&desvio=${desvioEl.value || ""}&return=supermercado">
-                aquí
-              </a>.
-            `;
+              <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/?consumo=${params.get("consumo") || ""}&precio=${params.get("precio") || ""}&ahorroCompra=${params.get("ahorroCompra") || ""}&desvio=${params.get("desvio") || ""}&return=supermercado">aquí</a>.`;
           } else {
             hintCosteKmEl.innerHTML = hintDefault;
           }
