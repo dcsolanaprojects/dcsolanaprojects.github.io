@@ -256,10 +256,12 @@
     </div>
 
     <div id="resultado" class="result">
-      Introduce tus datos para ver el resultado.
-    </div>
+  Introduce tus datos para ver el resultado.
+</div>
 
-    <div id="detalle" class="breakdown"></div>
+<div id="volverLink" class="hint"></div>
+
+<div id="detalle" class="breakdown"></div>
 
     <div id="acciones" class="action-box"></div>
 
@@ -273,7 +275,9 @@
     const precioEl = document.getElementById("precio");
     const extraCosteEl = document.getElementById("extraCoste");
     const resultadoEl = document.getElementById("resultado");
-    const detalleEl = document.getElementById("detalle");
+    const resultadoEl = document.getElementById("resultado");
+const volverLinkEl = document.getElementById("volverLink");
+const detalleEl = document.getElementById("detalle");
     const accionesEl = document.getElementById("acciones");
     const hintCosteKmEl = document.getElementById("hintCosteKm");
     const linkHintCosteMensualEl = document.getElementById("linkHintCosteMensual");
@@ -332,27 +336,27 @@
     }
 
     function copyKnownParams(target) {
-      [
-        "kmAnuales",
-        "seguroAnual",
-        "mantenimientoAnual",
-        "otrosAnuales",
-        "depreciacionAnual",
-        "financiacionAnual",
-        "desvio",
-        "diferencia",
-        "litros",
-        "ahorroCompra",
-        "origen"
-      ].forEach(param => {
-        const value = getParamValue(param);
-        if (value !== null) {
-          target[param] = value;
-        }
-      });
-
-      return target;
+  [
+    "kmAnuales",
+    "seguroAnual",
+    "mantenimientoAnual",
+    "otrosAnuales",
+    "depreciacionAnual",
+    "financiacionAnual",
+    "desvio",
+    "diferencia",
+    "litros",
+    "ahorroCompra",
+    "origen"
+  ].forEach(param => {
+    const value = getParamValue(param);
+    if (value !== null) {
+      target[param] = value;
     }
+  });
+
+  return target;
+}
 
     function hasMonthlyBreakdown() {
       return params.get("kmAnuales") !== null;
@@ -429,9 +433,10 @@
 
       if (isNaN(consumo) || isNaN(precio) || consumo <= 0 || precio <= 0 || extra < 0) {
         resultadoEl.textContent = "Introduce valores válidos.";
-        detalleEl.innerHTML = "";
-        accionesEl.innerHTML = "";
-        return;
+volverLinkEl.innerHTML = "";
+detalleEl.innerHTML = "";
+accionesEl.innerHTML = "";
+return;
       }
 
       const combustibleKm = (consumo / 100) * precio;
@@ -462,39 +467,45 @@
       `;
 
       const commonParams = copyKnownParams({
-        consumo: consumo,
-        precio: precio,
-        extraCoste: extra.toFixed(4),
-        costeKm: totalKm.toFixed(4)
-      });
+  consumo: consumo,
+  precio: precio,
+  extraCoste: extra.toFixed(4),
+  costeKm: totalKm.toFixed(4)
+});
 
-      const gasolinaParams = {
-        ...commonParams,
-        return: "gasolina"
-      };
+const gasolinaParams = {
+  ...commonParams,
+  return: "gasolina"
+};
 
-      const supermercadoParams = {
-        ...commonParams,
-        return: "supermercado"
-      };
+const supermercadoParams = {
+  ...commonParams,
+  return: "supermercado"
+};
 
-      const costeMensualParams = {
-        consumo: consumo,
-        precio: precio,
-        return: "coste-km"
-      };
+const costeMensualParams = copyKnownParams({
+  consumo: consumo,
+  precio: precio,
+  return: "coste-km"
+});
 
-      ["desvio", "diferencia", "litros", "ahorroCompra"].forEach(param => {
-        const value = getParamValue(param);
-        if (value !== null) {
-          costeMensualParams[param] = value;
-        }
-      });
+const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", gasolinaParams);
+const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", supermercadoParams);
+const costeMensualUrl = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", costeMensualParams);
 
-      const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", gasolinaParams);
-      const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", supermercadoParams);
-      const costeMensualUrl = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", costeMensualParams);
+volverLinkEl.innerHTML = "";
 
+if (returnTo === "gasolina") {
+  volverLinkEl.innerHTML = `<a href="${gasolinaUrl}">← Volver a gasolina con estos datos</a>`;
+}
+
+if (returnTo === "supermercado") {
+  volverLinkEl.innerHTML = `<a href="${supermercadoUrl}">← Volver al supermercado con estos datos</a>`;
+}
+
+if (returnTo === "coste-mensual") {
+  volverLinkEl.innerHTML = `<a href="${costeMensualUrl}">← Volver al coste mensual con estos datos</a>`;
+}
       if (returnTo === "coste-mensual") {
         accionesEl.innerHTML = `
           <strong>Aprovecha este resultado</strong>
