@@ -335,7 +335,7 @@ const detalleEl = document.getElementById("detalle");
       return value !== null && value !== "" ? value : null;
     }
 
-    function copyKnownParams(target) {
+function copyKnownParams(target) {
   [
     "kmAnuales",
     "seguroAnual",
@@ -349,8 +349,8 @@ const detalleEl = document.getElementById("detalle");
     "ahorroCompra",
     "origen"
   ].forEach(param => {
-    const value = getParamValue(param);
-    if (value !== null) {
+    const value = params.get(param);
+    if (value !== null && value !== "") {
       target[param] = value;
     }
   });
