@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>¿Cuánto cuesta tu coche por km? Calcula el coste real</title>
-  <meta name="description" content="Calcula el coste real por kilómetro de tu coche incluyendo combustible y desgaste. Descubre cuánto te cuesta cada trayecto.">
+  <meta name="description" content="Calcula el coste real por kilómetro de tu coche incluyendo combustible y otros costes. Descubre cuánto te cuesta cada trayecto.">
   <meta name="robots" content="index,follow" />
 
   <link rel="canonical" href="https://dcsolanaprojects.github.io/coste-km-coche/" />
@@ -33,11 +33,18 @@
     h1 {
       margin-top: 0;
       font-size: 28px;
+      line-height: 1.15;
+      color: #0f172a;
     }
 
     p {
       color: #374151;
       line-height: 1.5;
+    }
+
+    .lead {
+      font-weight: 700;
+      color: #111827;
     }
 
     .grid {
@@ -60,6 +67,7 @@
       font-size: 13px;
       font-weight: 700;
       margin-bottom: 6px;
+      color: #374151;
     }
 
     input {
@@ -68,12 +76,31 @@
       border: 1px solid #e5e7eb;
       font-size: 16px;
       background: #f9fafb;
+      color: #111827;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
     }
 
     .hint {
-      font-size: 12px;
-      color: #6b7280;
-      margin-top: 4px;
+      font-size: 13px;
+      color: #4b5563;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .hint a {
+      color: #2563eb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .hint a:hover {
+      text-decoration: underline;
     }
 
     .result {
@@ -81,16 +108,26 @@
       padding: 18px;
       border-radius: 12px;
       background: #e0e7ff;
+      color: #3730a3;
       font-weight: 700;
+      line-height: 1.45;
     }
 
     .breakdown {
       margin-top: 12px;
+      padding: 14px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fafafa;
       font-size: 14px;
       color: #374151;
       line-height: 1.6;
     }
 
+    .breakdown:empty,
+    .action-box:empty {
+      display: none;
+    }
 
     .action-box {
       margin-top: 20px;
@@ -167,10 +204,10 @@
       .container { padding: 20px 16px; }
       .grid { grid-template-columns: 1fr; }
       h1 { font-size: 24px; }
+      p { font-size: 16px; line-height: 1.6; }
     }
   </style>
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -188,9 +225,12 @@
   <div class="container">
     <h1>¿Cuánto te cuesta tu coche por km?</h1>
 
+    <p class="lead">
+      Calcula cuánto te cuesta cada kilómetro que haces en coche.
+    </p>
+
     <p>
-      No solo pagas combustible: cada kilómetro también tiene desgaste.
-      Calcula una estimación rápida del coste real de tu coche.
+      Puedes calcular solo el combustible o añadir un coste adicional por kilómetro para incluir mantenimiento, seguro, impuestos o depreciación.
     </p>
 
     <div class="grid">
@@ -205,17 +245,13 @@
       </div>
 
       <div class="field full">
-      <label for="extraCoste">Costes adicionales por km (opcional)</label>
-<input id="extraCoste" type="number" step="0.01" min="0" placeholder="Ej: 0.05" inputmode="decimal">
-<div class="hint">
-  Aquí puedes añadir mantenimiento, neumáticos, desgaste, seguro, impuestos o depreciación repartidos por km.
-  Si no lo sabes, déjalo vacío o calcula primero el coste mensual real del coche.
-</div>
-<div class="hint">
-  <a id="linkHintCosteMensual" href="https://dcsolanaprojects.github.io/coste-mensual-coche/">
-    Calcular esos costes anuales automáticamente →
-  </a>
-</div>
+        <label for="extraCoste">Coste adicional por km (opcional)</label>
+        <input id="extraCoste" type="number" step="0.01" min="0" placeholder="Ej: 0.05" inputmode="decimal">
+
+        <div class="hint" id="hintCosteKm">
+          Déjalo vacío si quieres calcular solo el combustible. Si quieres incluir mantenimiento, seguro, impuestos o depreciación, calcula primero el
+          <a id="linkHintCosteMensual" href="https://dcsolanaprojects.github.io/coste-mensual-coche/">coste mensual real del coche</a>.
+        </div>
       </div>
     </div>
 
@@ -239,10 +275,11 @@
     const resultadoEl = document.getElementById("resultado");
     const detalleEl = document.getElementById("detalle");
     const accionesEl = document.getElementById("acciones");
+    const hintCosteKmEl = document.getElementById("hintCosteKm");
+    const linkHintCosteMensualEl = document.getElementById("linkHintCosteMensual");
 
     const params = new URLSearchParams(window.location.search);
     const returnTo = params.get("return");
-    const linkHintCosteMensualEl = document.getElementById("linkHintCosteMensual");
 
     function setValueFromParam(input, paramName) {
       const value = params.get(paramName);
@@ -253,7 +290,20 @@
 
     setValueFromParam(consumoEl, "consumo");
     setValueFromParam(precioEl, "precio");
-setValueFromParam(extraCosteEl, "extraCoste");
+    setValueFromParam(extraCosteEl, "extraCoste");
+
+    const costeKmParam = parseFloat(params.get("costeKm"));
+
+    if (!isNaN(costeKmParam) && costeKmParam > 0 && !params.get("extraCoste")) {
+      const consumoInicial = parseFloat(consumoEl.value);
+      const precioInicial = parseFloat(precioEl.value);
+
+      if (!isNaN(consumoInicial) && !isNaN(precioInicial) && consumoInicial > 0 && precioInicial > 0) {
+        const costeCombustibleKm = (consumoInicial / 100) * precioInicial;
+        const costeNoCombustibleKm = Math.max(0, costeKmParam - costeCombustibleKm);
+        extraCosteEl.value = costeNoCombustibleKm.toFixed(2);
+      }
+    }
 
     function formatEuro(num) {
       return num.toLocaleString("es-ES", {
@@ -276,49 +326,101 @@ setValueFromParam(extraCosteEl, "extraCoste");
       return `${baseUrl}?${query.toString()}`;
     }
 
+    function getParamValue(paramName) {
+      const value = params.get(paramName);
+      return value !== null && value !== "" ? value : null;
+    }
+
+    function copyKnownParams(target) {
+      [
+        "kmAnuales",
+        "seguroAnual",
+        "mantenimientoAnual",
+        "otrosAnuales",
+        "depreciacionAnual",
+        "financiacionAnual",
+        "desvio",
+        "diferencia",
+        "litros",
+        "ahorroCompra",
+        "origen"
+      ].forEach(param => {
+        const value = getParamValue(param);
+        if (value !== null) {
+          target[param] = value;
+        }
+      });
+
+      return target;
+    }
+
+    function hasMonthlyBreakdown() {
+      return params.get("kmAnuales") !== null;
+    }
+
     function getAnnualParam(paramName) {
-  const value = parseFloat(params.get(paramName));
-  return !isNaN(value) && value >= 0 ? value : 0;
-}
+      const value = parseFloat(params.get(paramName));
+      return !isNaN(value) && value >= 0 ? value : 0;
+    }
 
-function hasMonthlyBreakdown() {
-  return params.get("kmAnuales") !== null;
-}
+    function buildMonthlyBreakdownHtml(kmAnuales) {
+      if (!hasMonthlyBreakdown() || isNaN(kmAnuales) || kmAnuales <= 0) {
+        return "";
+      }
 
-function buildMonthlyBreakdownHtml(kmAnuales) {
-  if (!hasMonthlyBreakdown() || isNaN(kmAnuales) || kmAnuales <= 0) {
-    return "";
-  }
+      const seguroAnual = getAnnualParam("seguroAnual");
+      const mantenimientoAnual = getAnnualParam("mantenimientoAnual");
+      const otrosAnuales = getAnnualParam("otrosAnuales");
+      const depreciacionAnual = getAnnualParam("depreciacionAnual");
+      const financiacionAnual = getAnnualParam("financiacionAnual");
 
-  const seguroAnual = getAnnualParam("seguroAnual");
-  const mantenimientoAnual = getAnnualParam("mantenimientoAnual");
-  const otrosAnuales = getAnnualParam("otrosAnuales");
-  const depreciacionAnual = getAnnualParam("depreciacionAnual");
-  const financiacionAnual = getAnnualParam("financiacionAnual");
+      const totalOtrosAnual =
+        seguroAnual +
+        mantenimientoAnual +
+        otrosAnuales +
+        depreciacionAnual +
+        financiacionAnual;
 
-  const totalOtrosAnual =
-    seguroAnual +
-    mantenimientoAnual +
-    otrosAnuales +
-    depreciacionAnual +
-    financiacionAnual;
+      if (totalOtrosAnual <= 0) {
+        return "";
+      }
 
-  if (totalOtrosAnual <= 0) {
-    return "";
-  }
+      return `
+        <br>
+        <strong>Desglose recibido desde coste mensual:</strong><br>
+        Seguro: ${formatNumber(seguroAnual / kmAnuales)} €/km<br>
+        Mantenimiento: ${formatNumber(mantenimientoAnual / kmAnuales)} €/km<br>
+        Impuestos, ITV y otros: ${formatNumber(otrosAnuales / kmAnuales)} €/km<br>
+        Depreciación: ${formatNumber(depreciacionAnual / kmAnuales)} €/km<br>
+        Financiación/intereses: ${formatNumber(financiacionAnual / kmAnuales)} €/km<br>
+        <strong>Total costes no combustibles:</strong> ${formatNumber(totalOtrosAnual / kmAnuales)} €/km<br>
+        <span class="hint">Si modificas manualmente el coste adicional por km, ajustas el valor agregado, pero no el desglose anual original.</span>
+      `;
+    }
 
-  return `
-    <br>
-    <strong>Desglose de otros costes recibido desde coste mensual:</strong><br>
-    Seguro: ${formatNumber(seguroAnual / kmAnuales)} €/km<br>
-    Mantenimiento: ${formatNumber(mantenimientoAnual / kmAnuales)} €/km<br>
-    Impuestos, ITV y otros: ${formatNumber(otrosAnuales / kmAnuales)} €/km<br>
-    Depreciación: ${formatNumber(depreciacionAnual / kmAnuales)} €/km<br>
-    Financiación/intereses: ${formatNumber(financiacionAnual / kmAnuales)} €/km<br>
-    <strong>Total otros costes:</strong> ${formatNumber(totalOtrosAnual / kmAnuales)} €/km<br>
-    <span class="hint">Si cambias manualmente “otros costes” aquí, cambias el coste agregado por km, pero no el desglose anual original.</span>
-  `;
-}
+    function actualizarHint() {
+      const vieneDeCosteMensual =
+        params.get("origen") === "coste-mensual" ||
+        params.get("kmAnuales") !== null;
+
+      const linkCosteMensual = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", {
+        consumo: consumoEl.value || "",
+        precio: precioEl.value || "",
+        return: "coste-km"
+      });
+
+      if (linkHintCosteMensualEl) {
+        linkHintCosteMensualEl.href = linkCosteMensual;
+      }
+
+      if (hintCosteKmEl && vieneDeCosteMensual) {
+        hintCosteKmEl.innerHTML = `
+          Estás utilizando un coste completo por km calculado desde el coste mensual del coche.
+          Puedes modificarlo manualmente o ajustar el coste mensual del coche
+          <a href="${linkCosteMensual}">aquí</a>.
+        `;
+      }
+    }
 
     function calcular() {
       const consumo = parseFloat(consumoEl.value);
@@ -327,7 +429,7 @@ function buildMonthlyBreakdownHtml(kmAnuales) {
 
       if (isNaN(consumo) || isNaN(precio) || consumo <= 0 || precio <= 0 || extra < 0) {
         resultadoEl.textContent = "Introduce valores válidos.";
-        detalleEl.textContent = "";
+        detalleEl.innerHTML = "";
         accionesEl.innerHTML = "";
         return;
       }
@@ -337,79 +439,129 @@ function buildMonthlyBreakdownHtml(kmAnuales) {
       const coste5km = totalKm * 5;
 
       resultadoEl.innerHTML = `
-        Tu coche te cuesta aproximadamente <strong>${formatNumber(totalKm)} €/km</strong> en total.
+        Tu coche te cuesta aproximadamente <strong>${formatNumber(totalKm)} €/km</strong>.
         <br><br>
-        (${formatNumber(combustibleKm)} € combustible + ${formatNumber(extra)} € otros costes)
+        ${formatNumber(combustibleKm)} €/km combustible + ${formatNumber(extra)} €/km coste adicional
       `;
 
       const kmAnualesParam = parseFloat(params.get("kmAnuales"));
-const desgloseMensualHtml = buildMonthlyBreakdownHtml(kmAnualesParam);
+      const desgloseMensualHtml = buildMonthlyBreakdownHtml(kmAnualesParam);
 
-detalleEl.innerHTML = `
-  <strong>Coste por km:</strong><br>
-  Combustible: ${formatNumber(combustibleKm)} €/km<br>
-  Otros costes: ${formatNumber(extra)} €/km<br>
-  Total: ${formatNumber(totalKm)} €/km<br>
-  ${desgloseMensualHtml}
-  <br>
-  <strong>Ejemplos rápidos:</strong><br>
-  10 km → ${formatEuro(totalKm * 10)}<br>
-  50 km → ${formatEuro(totalKm * 50)}<br>
-  100 km → ${formatEuro(totalKm * 100)}<br><br>
-  Desviarte 5 km te cuesta aproximadamente ${formatEuro(coste5km)}.
-`;
+      detalleEl.innerHTML = `
+        <strong>Coste por km:</strong><br>
+        Combustible: ${formatNumber(combustibleKm)} €/km<br>
+        Coste adicional: ${formatNumber(extra)} €/km<br>
+        Total: ${formatNumber(totalKm)} €/km<br>
+        ${desgloseMensualHtml}
+        <br>
+        <strong>Ejemplos rápidos:</strong><br>
+        10 km → ${formatEuro(totalKm * 10)}<br>
+        50 km → ${formatEuro(totalKm * 50)}<br>
+        100 km → ${formatEuro(totalKm * 100)}<br><br>
+        Desviarte 5 km te cuesta aproximadamente ${formatEuro(coste5km)}.
+      `;
 
-const commonParams = {
-  consumo: consumo,
-  precio: precio,
-  extraCoste: extra.toFixed(4),
-  costeKm: totalKm.toFixed(4)
-};
-if (linkHintCosteMensualEl) {
-  linkHintCosteMensualEl.href = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", commonParams);
-}
-[
-  "kmAnuales",
-  "seguroAnual",
-  "mantenimientoAnual",
-  "otrosAnuales",
-  "depreciacionAnual",
-  "financiacionAnual",
-  "desvio",
-  "diferencia",
-  "litros",
-  "ahorroCompra"
-].forEach(param => {
-  const value = params.get(param);
-  if (value !== null && value !== "") {
-    commonParams[param] = value;
-  }
-});
+      const commonParams = copyKnownParams({
+        consumo: consumo,
+        precio: precio,
+        extraCoste: extra.toFixed(4),
+        costeKm: totalKm.toFixed(4)
+      });
 
-      const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", commonParams);
-      const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", commonParams);
-      const costeMensualUrl = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", commonParams);
+      const gasolinaParams = {
+        ...commonParams,
+        return: "gasolina"
+      };
 
-      if (returnTo === "gasolina") {
+      const supermercadoParams = {
+        ...commonParams,
+        return: "supermercado"
+      };
+
+      const costeMensualParams = {
+        consumo: consumo,
+        precio: precio,
+        return: "coste-km"
+      };
+
+      ["desvio", "diferencia", "litros", "ahorroCompra"].forEach(param => {
+        const value = getParamValue(param);
+        if (value !== null) {
+          costeMensualParams[param] = value;
+        }
+      });
+
+      const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/calculadora-gasolina/", gasolinaParams);
+      const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/compensa-supermercado/", supermercadoParams);
+      const costeMensualUrl = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", costeMensualParams);
+
+      if (returnTo === "coste-mensual") {
         accionesEl.innerHTML = `
           <strong>Aprovecha este resultado</strong>
-          <a class="action-card" href="${gasolinaUrl}"><span>Volver a la calculadora de gasolina →</span><small>Recalcula el desvío usando este coste real por km.</small></a>
-          <a class="action-card" href="${costeMensualUrl}"><span>Estimar coste mensual del coche →</span><small>Convierte consumo y precio en una estimación mensual completa.</small></a>
+          <a class="action-card" href="${costeMensualUrl}">
+            <span>Volver al coste mensual del coche →</span>
+            <small>Conserva consumo y precio para seguir ajustando el cálculo completo.</small>
+          </a>
+          <a class="action-card" href="${gasolinaUrl}">
+            <span>Calcular si compensa una gasolinera más barata →</span>
+            <small>Usa este coste por km para valorar un desvío.</small>
+          </a>
+          <a class="action-card" href="${supermercadoUrl}">
+            <span>Calcular si compensa ir a otro supermercado →</span>
+            <small>Usa este coste por km para valorar otro desplazamiento.</small>
+          </a>
+        `;
+      } else if (returnTo === "gasolina") {
+        accionesEl.innerHTML = `
+          <strong>Aprovecha este resultado</strong>
+          <a class="action-card" href="${gasolinaUrl}">
+            <span>Volver a gasolina con estos datos →</span>
+            <small>Recalcula el desvío usando este coste por km.</small>
+          </a>
+          <a class="action-card" href="${costeMensualUrl}">
+            <span>Calcular coste mensual real del coche →</span>
+            <small>Calcula el coste completo mensual si quieres afinar más.</small>
+          </a>
+          <a class="action-card" href="${supermercadoUrl}">
+            <span>Valorar otro supermercado con estos datos →</span>
+            <small>Usa consumo, precio y coste por km en otra decisión de ahorro.</small>
+          </a>
         `;
       } else if (returnTo === "supermercado") {
         accionesEl.innerHTML = `
           <strong>Aprovecha este resultado</strong>
-          <a class="action-card" href="${supermercadoUrl}"><span>Volver a la calculadora de supermercado →</span><small>Recalcula la compra usando este coste real por km.</small></a>
-          <a class="action-card" href="${costeMensualUrl}"><span>Estimar coste mensual del coche →</span><small>Convierte consumo y precio en una estimación mensual completa.</small></a>
+          <a class="action-card" href="${supermercadoUrl}">
+            <span>Volver al supermercado con estos datos →</span>
+            <small>Recalcula la compra usando este coste por km.</small>
+          </a>
+          <a class="action-card" href="${costeMensualUrl}">
+            <span>Calcular coste mensual real del coche →</span>
+            <small>Calcula el coste completo mensual si quieres afinar más.</small>
+          </a>
+          <a class="action-card" href="${gasolinaUrl}">
+            <span>Calcular si compensa una gasolinera más barata →</span>
+            <small>Usa consumo, precio y coste por km en otra decisión de ahorro.</small>
+          </a>
         `;
       } else {
         accionesEl.innerHTML = `
           <strong>Aprovecha este resultado</strong>
-          <a class="action-card" href="${costeMensualUrl}"><span>Ver coste mensual real del coche →</span><small>Calcula cuánto te cuesta tener coche al mes y al año.</small></a>
-          <a class="action-card" href="${gasolinaUrl}"><span>Calcular si compensa una gasolinera más barata →</span><small>Usa tu coste real por km para decidir si merece la pena desviarte.</small></a>
-          <a class="action-card" href="${supermercadoUrl}"><span>Calcular si compensa ir a otro supermercado →</span><small>Comprueba si el ahorro de la compra supera el coste del trayecto.</small></a>
+          <a class="action-card" href="${costeMensualUrl}">
+            <span>Calcular coste mensual real del coche →</span>
+            <small>Estima cuánto te cuesta tener coche al mes y al año.</small>
+          </a>
+          <a class="action-card" href="${gasolinaUrl}">
+            <span>Calcular si compensa una gasolinera más barata →</span>
+            <small>Usa este coste por km para decidir si merece la pena desviarte.</small>
+          </a>
+          <a class="action-card" href="${supermercadoUrl}">
+            <span>Calcular si compensa ir a otro supermercado →</span>
+            <small>Comprueba si el ahorro de la compra supera el coste del trayecto.</small>
+          </a>
         `;
       }
+
+      actualizarHint();
     }
 
     consumoEl.addEventListener("input", calcular);
