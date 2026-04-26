@@ -319,16 +319,25 @@ const detalleEl = document.getElementById("detalle");
     }
 
     function formatNumber(num) {
-      return num.toLocaleString("es-ES", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-    }
+  return num.toLocaleString("es-ES", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
 
-    function buildUrl(baseUrl, data) {
-      const query = new URLSearchParams(data);
-      return `${baseUrl}?${query.toString()}`;
+    function buildUrl(baseUrl, overrides = {}) {
+  const query = new URLSearchParams(window.location.search);
+
+  Object.entries(overrides).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      query.set(key, value);
+    } else {
+      query.delete(key);
     }
+  });
+
+  return `${baseUrl}?${query.toString()}`;
+}
 
     function getParamValue(paramName) {
       const value = params.get(paramName);
@@ -407,11 +416,40 @@ function copyKnownParams(target) {
         params.get("origen") === "coste-mensual" ||
         params.get("kmAnuales") !== null;
 
-      const linkCosteMensual = buildUrl("https://dcsolanaprojects.github.io/coste-mensual-coche/", {
-        consumo: consumoEl.value || "",
-        precio: precioEl.value || "",
-        return: "coste-km"
-      });
+      const linkCosteKm = buildUrl(
+  "https://dcsolanaprojects.github.io/coste-km-coche/",
+  {
+    consumo: v.consumo,
+    precio: v.precio,
+    extraCoste: v.extraKm,
+    desvio: v.desvio,
+    diferencia: v.diferencia,
+    litros: v.litros,
+    return: "gasolina"
+  }
+);
+
+const linkCosteMensual = buildUrl(
+  "https://dcsolanaprojects.github.io/coste-mensual-coche/",
+  {
+    consumo: v.consumo,
+    precio: v.precio,
+    desvio: v.desvio,
+    diferencia: v.diferencia,
+    litros: v.litros,
+    return: "gasolina"
+  }
+);
+
+const linkSupermercado = buildUrl(
+  "https://dcsolanaprojects.github.io/compensa-supermercado/",
+  {
+    consumo: v.consumo,
+    precio: v.precio,
+    extraCoste: v.extraKm,
+    desvio: v.desvio
+  }
+);
 
       if (linkHintCosteMensualEl) {
         linkHintCosteMensualEl.href = linkCosteMensual;
