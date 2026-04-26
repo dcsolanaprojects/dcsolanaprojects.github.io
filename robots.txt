@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dcsolanaprojects.github.io/sitemap.xml
