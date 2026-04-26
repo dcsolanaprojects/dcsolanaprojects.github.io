@@ -172,8 +172,13 @@ const detalleEl = document.getElementById("detalle");
     function setValueFromParam(input, paramName) { const value = params.get(paramName); if (value !== null && value !== "") input.value = value; }
     setValueFromParam(kmAnualesEl, "kmAnuales"); setValueFromParam(consumoEl, "consumo"); setValueFromParam(precioEl, "precio"); setValueFromParam(seguroAnualEl, "seguroAnual"); setValueFromParam(mantenimientoAnualEl, "mantenimientoAnual"); setValueFromParam(otrosAnualesEl, "otrosAnuales"); setValueFromParam(depreciacionAnualEl, "depreciacionAnual"); setValueFromParam(financiacionAnualEl, "financiacionAnual");
     function formatEuro(num) { return num.toLocaleString("es-ES", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-    function formatNumber(num) { return num.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-    function formatPercent(num) { return num.toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + "%"; }
+    function formatNumber(num) {
+  return num.toLocaleString("es-ES", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+function formatPercent(num) { return num.toLocaleString("es-ES", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + "%"; }
     function buildUrl(baseUrl, data) { const query = new URLSearchParams(data); return `${baseUrl}?${query.toString()}`; }
     function getValues() { return { kmAnuales: parseFloat(kmAnualesEl.value), consumo: parseFloat(consumoEl.value), precio: parseFloat(precioEl.value), seguroAnual: parseFloat(seguroAnualEl.value) || 0, mantenimientoAnual: parseFloat(mantenimientoAnualEl.value) || 0, otrosAnuales: parseFloat(otrosAnualesEl.value) || 0, depreciacionAnual: parseFloat(depreciacionAnualEl.value) || 0, financiacionAnual: parseFloat(financiacionAnualEl.value) || 0 }; }
     function valuesAreValid(v) { return [v.kmAnuales, v.consumo, v.precio, v.seguroAnual, v.mantenimientoAnual, v.otrosAnuales, v.depreciacionAnual, v.financiacionAnual].every(n => !isNaN(n) && n >= 0) && v.kmAnuales > 0 && v.consumo > 0 && v.precio > 0; }
