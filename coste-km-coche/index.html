@@ -324,6 +324,12 @@ const detalleEl = document.getElementById("detalle");
     maximumFractionDigits: 2
   });
 }
+function formatKmCost(num) {
+  return num.toLocaleString("es-ES", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
 
     function buildUrl(baseUrl, overrides = {}) {
   const query = new URLSearchParams(window.location.search);
@@ -483,9 +489,9 @@ return;
       const coste5km = totalKm * 5;
 
       resultadoEl.innerHTML = `
-        Tu coche te cuesta aproximadamente <strong>${formatNumber(totalKm)} €/km</strong>.
+        Tu coche te cuesta aproximadamente <strong>${formatKmCost(totalKm)} €/km</strong>.
         <br><br>
-        ${formatNumber(combustibleKm)} €/km combustible + ${formatNumber(extra)} €/km coste adicional
+        ${formatKmCost(combustibleKm)} €/km combustible + ${formatKmCost(extra)} €/km coste adicional
       `;
 
       const kmAnualesParam = parseFloat(params.get("kmAnuales"));
@@ -493,9 +499,9 @@ return;
 
       detalleEl.innerHTML = `
         <strong>Coste por km:</strong><br>
-        Combustible: ${formatNumber(combustibleKm)} €/km<br>
-        Coste adicional: ${formatNumber(extra)} €/km<br>
-        Total: ${formatNumber(totalKm)} €/km<br>
+        Combustible: ${formatKmCost(combustibleKm)} €/km<br>
+Coste adicional: ${formatKmCost(extra)} €/km<br>
+Total: ${formatKmCost(totalKm)} €/km<br>
         ${desgloseMensualHtml}
         <br>
         <strong>Ejemplos rápidos:</strong><br>
