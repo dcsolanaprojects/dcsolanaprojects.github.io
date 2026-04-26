@@ -275,7 +275,7 @@
     const precioEl = document.getElementById("precio");
     const extraCosteEl = document.getElementById("extraCoste");
     const resultadoEl = document.getElementById("resultado");
-    const resultadoEl = document.getElementById("resultado");
+    
 const volverLinkEl = document.getElementById("volverLink");
 const detalleEl = document.getElementById("detalle");
     const accionesEl = document.getElementById("acciones");
@@ -433,7 +433,8 @@ const detalleEl = document.getElementById("detalle");
 
       if (isNaN(consumo) || isNaN(precio) || consumo <= 0 || precio <= 0 || extra < 0) {
         resultadoEl.textContent = "Introduce valores válidos.";
-volverLinkEl.innerHTML = "";
+  volverLinkEl.innerHTML = "";
+
 detalleEl.innerHTML = "";
 accionesEl.innerHTML = "";
 return;
