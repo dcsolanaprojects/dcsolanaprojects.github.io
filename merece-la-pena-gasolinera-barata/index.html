@@ -94,16 +94,34 @@
     }
 
     .faq {
-      margin-top: 24px;
-      background: #fafafa;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      padding: 14px;
-    }
+  margin-top: 28px;
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+}
 
-    .faq details {
-      margin-top: 10px;
-    }
+.faq h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.faq details {
+  margin: 0;
+  padding: 10px 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.faq details:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.faq summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #111827;
+}
 
     .related {
       margin-top: 24px;
@@ -121,6 +139,24 @@
     .footer-link a {
       color: #6b7280;
     }
+
+    .myth-box {
+  margin-top: 28px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  line-height: 1.6;
+}
+
+.myth-box h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.myth-box strong {
+  color: #111827;
+}
 
     @media (max-width: 600px) {
       body { padding: 12px; }
@@ -241,13 +277,33 @@
       </details>
 
       <details>
-        <summary>¿La gasolina barata es peor?</summary>
-        <p>
-          En España, todas las gasolinas cumplen normativas. La diferencia suele estar en costes, no en calidad base.
-        </p>
-      </details>
+  <summary>¿La gasolina barata es peor para el coche?</summary>
+  <p>
+    En España, todas las gasolinas cumplen las mismas normativas de calidad, independientemente de la estación de servicio.
+  </p>
+  <p>
+    La diferencia principal suele estar en los aditivos. Algunas marcas añaden paquetes de aditivos propios que pueden ayudar a mantener más limpio el sistema de inyección o las válvulas, especialmente a largo plazo.
+  </p>
+  <p>
+    En el uso diario, la diferencia es pequeña para la mayoría de conductores. A corto plazo no vas a notar cambios relevantes, pero a muy largo plazo puede haber ligeras diferencias en limpieza y mantenimiento del motor.
+  </p>
+</details>
     </div>
+<div class="myth-box">
+  <h2>Mito vs realidad</h2>
 
+  <p>
+    <strong>Mito:</strong> la gasolina barata es peor y puede dañar el motor.
+  </p>
+
+  <p>
+    <strong>Realidad:</strong> todo el combustible en España cumple las mismas normativas de calidad. La diferencia está en los aditivos que algunas marcas añaden para mejorar la limpieza del motor, pero en el uso normal las diferencias son pequeñas.
+  </p>
+
+  <p>
+    Lo importante no es tanto la marca como evitar hábitos que sí afectan al motor, como apurar constantemente el depósito o no hacer mantenimiento.
+  </p>
+</div>
     <div class="related">
       <a href="https://dcsolanaprojects.github.io/coste-mensual-coche/">Coste mensual</a> ·
       <a href="https://dcsolanaprojects.github.io/coste-km-coche/">Coste por km</a> ·
