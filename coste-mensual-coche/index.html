@@ -42,6 +42,10 @@
   margin-top: 10px;
   font-size: 14px;
 }
+.breakdown:empty {
+  display: none;
+}
+
     .action-box {
       margin-top: 20px;
       padding: 16px;
@@ -50,7 +54,9 @@
       border: 1px solid #e5e7eb;
       line-height: 1.5;
     }
-
+.action-box:empty {
+  display: none;
+}
     .action-box strong {
       display: block;
       margin-bottom: 12px;
@@ -103,6 +109,31 @@
     .faq-icon::after { width: 2px; height: 10px; }
     .faq-item[open] .faq-icon::after { display: none; }
     .faq-item p { margin: 8px 0 0; color: #374151; line-height: 1.55; }
+    .related-tools {
+  margin-top: 22px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.related-tools strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #111827;
+}
+
+.related-tools a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.related-tools a:hover {
+  text-decoration: underline;
+}
     .footer-link { margin-top: 18px; font-size: 13px; color: #6b7280; text-align: center; }
     .footer-link a { color: #6b7280; text-decoration: none; }
     .footer-link a:hover { text-decoration: underline; }
@@ -151,6 +182,12 @@
       <details class="faq-item"><summary><span class="faq-question">¿Es mejor calcular kilómetros al mes o al año?</span><span class="faq-icon"></span></summary><p>Para el uso del coche suele ser más práctico introducir kilómetros al año, porque seguros, mantenimientos e ITV se suelen pensar en términos anuales. El resultado mensual es más útil para entender el impacto en tu presupuesto.</p></details>
       <details class="faq-item"><summary><span class="faq-question">¿Esta calculadora sirve para comparar coches?</span><span class="faq-icon"></span></summary><p>Sí. Puedes cambiar consumo, seguro, mantenimiento y depreciación para comparar dos coches distintos y ver cuál tiene un coste mensual más bajo, más allá del precio de compra.</p></details>
     </div>
+    <div class="related-tools">
+  <strong>Herramientas relacionadas</strong>
+  <a href="https://dcsolanaprojects.github.io/coste-km-coche/">Calcular el coste real por kilómetro</a><br>
+  <a href="https://dcsolanaprojects.github.io/calculadora-gasolina/">Ver si compensa una gasolinera más barata</a><br>
+  <a href="https://dcsolanaprojects.github.io/compensa-supermercado/">Ver si compensa ir a otro supermercado</a>
+</div>
     <div class="footer-link"><a href="https://dcsolanaprojects.github.io/">Ver todas las herramientas →</a></div>
   </div>
   <script>
