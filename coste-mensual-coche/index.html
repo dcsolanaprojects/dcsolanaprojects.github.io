@@ -252,6 +252,11 @@ if (volverLinkEl && params.get("return") === "supermercado") {
     <a href="${supermercadoUrl}">← Volver al supermercado con estos datos</a>
   `;
 }
+if (volverLinkEl && params.get("return") === "coste-km") {
+  volverLinkEl.innerHTML = `
+    <a href="${costeKmUrl}">← Volver al coste por km con estos datos</a>
+  `;
+}
 accionesEl.innerHTML = `<strong>Aprovecha este resultado</strong>
         <a class="action-card" href="${costeKmUrl}" data-tool-link="coste-km"><span>Ver coste por kilómetro →</span><small>Usa el coste total y los costes no combustibles por km.</small></a>
         <a class="action-card" href="${gasolinaUrl}" data-tool-link="gasolina"><span>Ahorrar en gasolina con estos datos →</span><small>Comprueba si una gasolinera más barata compensa incluyendo el coste real del desvío.</small></a>
