@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Is it worth driving to a cheaper gas station? Real savings calculator</title>
+  <meta name="description" content="Calculate if it is worth driving to a cheaper gas station. Consider fuel consumption, extra distance and fuel amount to estimate your real savings.">
+  <meta name="robots" content="index,follow" />
+  <meta name="author" content="Daniel Cabrera" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Is it worth driving to a cheaper gas station?" />
+  <meta property="og:description" content="Calculate your real savings based on consumption, detour distance and fuel amount." />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Is it worth driving to a cheaper gas station?" />
+  <meta name="twitter:description" content="Calculate your real savings in seconds." />
+
+  <link rel="canonical" href="https://dcsolanaprojects.github.io/en/gas-station-calculator/" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: #ffffff;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: #0f172a;
+    }
+
+  h2 {
+  margin-top: 22px;
+  margin-bottom: 8px;
+  font-size: 18px;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+.container > h2 {
+  font-size: 17px;
+}
+
+
+h3 {
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-size: 16px;
+  line-height: 1.3;
+  color: #111827;
+}
+
+p {
+  margin: 6px 0;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.calc-note {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.faq-block {
+  margin-top: 22px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.faq-block h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.faq-item {
+  border-top: 1px solid #e5e7eb;
+  padding: 8px 0;
+}
+
+.faq-item:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.35;
+  flex: 1;
+}
+
+.faq-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  background: #6b7280;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.faq-icon::before {
+  width: 10px;
+  height: 2px;
+}
+
+.faq-icon::after {
+  width: 2px;
+  height: 10px;
+}
+
+.faq-item[open] .faq-icon::after {
+  display: none;
+}
+
+.faq-item p {
+  margin: 8px 0 0;
+  color: #374151;
+  line-height: 1.55;
+}
+
+.faq-item summary:hover .faq-question {
+  color: #2563eb;
+}
+
+@media (max-width: 600px) {
+  .faq-block {
+    padding: 12px;
+  }
+
+  .faq-question {
+    font-size: 15px;
+  }
+
+  .faq-item p {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+}
+
+.breakdown:empty {
+  display: none;
+}
+
+    .action-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .action-box strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    .action-card {
+      display: block;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      text-decoration: none;
+    }
+
+    .action-card:hover {
+      text-decoration: none;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .action-card span {
+      display: block;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .action-card small {
+      display: block;
+      margin-top: 4px;
+      color: #6b7280;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
+
+    .lead {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .nudge {
+      margin-top: 10px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      font-size: 16px;
+      background: #f9fafb;
+      color: #111827;
+      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-reset {
+      background: #e5e7eb;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .btn-reset:hover {
+      background: #d1d5db;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 12px;
+      display: block;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .ok {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .bad {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .neutral {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .breakdown {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fafafa;
+      color: #374151;
+      font-size: 14px;
+      line-height: 1.6;
+      display: block;
+    }
+
+    .calc-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .intro {
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+
+.related-tools {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.related-tools strong {
+  display: none;
+}
+
+.related-tools a {
+  color: #6b7280;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.related-tools a:hover {
+  text-decoration: underline;
+}
+
+.footer-link {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.footer-link a {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.footer-link a:hover {
+  text-decoration: underline;
+}
+.hint {
+  font-size: 13px;
+  color: #4b5563;
+  margin-top: 6px;
+  line-height: 1.45;
+}
+
+.hint a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hint a:hover {
+  text-decoration: underline;
+}
+.link-box:empty,
+.action-box:empty {
+  display: none;
+}
+.secondary-link {
+  margin-top: 10px;
+}
+
+.secondary-link a {
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.secondary-link a:hover {
+  text-decoration: underline;
+}
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      .container {
+        padding: 20px 16px;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 24px;
+        line-height: 1.15;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+gtag('config', 'G-TXNSN93S5L', {
+  page_title: 'Gas station calculator',
+  page_path: '/en/gas-station-calculator/'
+});
+</script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Is it worth driving to a cheaper gas station?</h1>
+    <p class="lead">Check in seconds whether it is worth taking a detour to refuel at a cheaper gas station.</p>
+<p class="intro">
+  Calculate your real savings by considering fuel consumption, detour distance and fuel amount. This way you can see whether the detour is actually worth it.
+</p>
+
+
+    <form id="form">
+      <div class="grid">
+        <div class="field">
+          <label for="consumo">Fuel consumption (L/100 km)</label>
+          <input type="number" id="consumo" value="6.5" step="0.1" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="precio">Fuel price (€/L)</label>
+          <input type="number" id="precio" value="1.55" step="0.01" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="desvio">Detour one way (km)</label>
+          <input type="number" id="desvio" value="2" step="0.1" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field">
+          <label for="diferencia">Price difference (€/L)</label>
+          <input type="number" id="diferencia" value="0.06" step="0.01" min="0" inputmode="decimal">
+        </div>
+
+        <div class="field full">
+          <label for="litros">Fuel amount (liters)</label>
+          <input type="number" id="litros" value="40" step="0.1" min="0" inputmode="decimal">
+        </div>
+
+<div class="secondary-link">
+  <a href="#" id="toggleAdvanced">Use full car cost →</a>
+</div>     
+<div class="field full" id="advancedBlock" style="display:none;">
+  <label for="extraKm">Full car cost per km (optional)</label>
+<input type="number" id="extraKm" placeholder="e.g. 0.05" step="0.01" min="0" inputmode="decimal">
+<div class="hint" id="hintCosteKm">
+  Leave it empty if you only want to calculate fuel cost.
+  If you want to include maintenance, insurance, taxes or depreciation,
+  first calculate the
+  <a href="https://dcsolanaprojects.github.io/en/monthly-car-cost/">real monthly car cost</a>.
+</div>
+</div>
+      </div>
+
+      <div class="buttons">
+        <button type="reset" class="btn-reset" id="resetBtn">Reset</button>
+      </div>
+    </form>
+
+    <div id="resultado" class="result neutral">Enter your data to see the result.</div>
+   
+    <div id="detalle" class="breakdown"></div>
+
+    <div id="acciones" class="action-box"></div>
+
+    <p class="calc-note">
+      The result updates automatically when you change any value.
+    </p>
+
+<h2>When is it worth driving to a cheaper gas station?</h2>
+<p>
+It is not always worth driving to the cheapest gas station. To know for sure, you need to consider the price difference per liter, detour distance, car consumption and how much fuel you are going to buy.
+</p>
+
+<p>
+It is worth it when the saving per liter is high enough and the detour is small. If you have to drive too far or the price difference is low, the cost of the trip can exceed the saving.
+</p>
+
+<p>
+With this calculator you can estimate real savings in seconds and decide whether it is worth taking the detour or better to refuel at your usual gas station.
+</p>
+
+<div class="faq-block">
+  <h2>FAQ</h2>
+
+  <details class="faq-item">
+    <summary><span class="faq-question">When is it worth driving to a cheaper gas station?</span><span class="faq-icon"></span></summary>
+    <p>
+      It is worth it when the price difference per liter is high, the detour is small and you are buying a significant amount of fuel. If the detour is too long, the saving can disappear.
+    </p>
+  </details>
+
+  <details class="faq-item">
+    <summary><span class="faq-question">How many kilometers is it worth driving?</span><span class="faq-icon"></span></summary>
+    <p>
+      It depends on your car consumption, fuel price and fuel amount. This calculator shows the distance limit beyond which it no longer pays off.
+    </p>
+  </details>
+
+  <details class="faq-item">
+    <summary><span class="faq-question">Is cheaper fuel worse for the car?</span><span class="faq-icon"></span></summary>
+    <p>
+      Fuel must meet the same base quality regulations regardless of the gas station. Price differences are usually due to operating costs, not necessarily lower base fuel quality.
+    </p>
+  </details>
+
+  <details class="faq-item">
+    <summary><span class="faq-question">How are real savings calculated?</span><span class="faq-icon"></span></summary>
+    <p>
+      It is calculated by subtracting the additional cost of the detour from the fuel price saving. If the result is positive, it is worth it; if it is negative, you are losing money.
+    </p>
+  </details>
+</div>
+<div class="related-tools">
+  <strong>Related tools</strong>
+  <a href="https://dcsolanaprojects.github.io/en/monthly-car-cost/">Monthly car cost</a> ·
+  <a href="https://dcsolanaprojects.github.io/en/gas-station-calculator/">Cheaper gas station</a> ·
+  <a href="https://dcsolanaprojects.github.io/en/supermarket-trip-calculator/">Another supermarket</a>
+</div>
+<div class="footer-link">
+  <a href="https://dcsolanaprojects.github.io/en/">View all tools →</a>
+</div>
+ </div> 
+
+<script>
+  const consumoEl = document.getElementById("consumo");
+  const precioEl = document.getElementById("precio");
+  const desvioEl = document.getElementById("desvio");
+  const diferenciaEl = document.getElementById("diferencia");
+  const litrosEl = document.getElementById("litros");
+  const extraKmEl = document.getElementById("extraKm");
+
+  const resultadoEl = document.getElementById("resultado");
+  const detalleEl = document.getElementById("detalle");
+  const accionesEl = document.getElementById("acciones");
+  const resetBtn = document.getElementById("resetBtn");
+
+  const toggleAdvancedEl = document.getElementById("toggleAdvanced");
+  const advancedBlockEl = document.getElementById("advancedBlock");
+  const hintCosteKmEl = document.getElementById("hintCosteKm");
+
+  const params = new URLSearchParams(window.location.search);
+
+  const vieneDeCosteMensual =
+    params.get("origen") === "coste-mensual" ||
+    params.get("kmAnuales") !== null;
+
+  const hintDefault = hintCosteKmEl ? hintCosteKmEl.innerHTML : "";
+
+  function buildUrl(baseUrl, overrides = {}) {
+    const query = new URLSearchParams(window.location.search);
+
+    Object.entries(overrides).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        query.set(key, value);
+      } else {
+        query.delete(key);
+      }
+    });
+
+    return `${baseUrl}?${query.toString()}`;
+  }
+
+  function setValueFromParam(input, paramName) {
+    const value = params.get(paramName);
+    if (value !== null && value !== "") {
+      input.value = value;
+    }
+  }
+
+  setValueFromParam(consumoEl, "consumo");
+  setValueFromParam(precioEl, "precio");
+  setValueFromParam(desvioEl, "desvio");
+  setValueFromParam(diferenciaEl, "diferencia");
+  setValueFromParam(litrosEl, "litros");
+  setValueFromParam(extraKmEl, "extraCoste");
+
+  const costeKmParam = parseFloat(params.get("costeKm"));
+
+  if (!isNaN(costeKmParam) && costeKmParam > 0) {
+    const consumoInicial = parseFloat(consumoEl.value);
+    const precioInicial = parseFloat(precioEl.value);
+
+    if (!isNaN(consumoInicial) && !isNaN(precioInicial) && consumoInicial > 0 && precioInicial > 0) {
+      const costeCombustibleKm = (consumoInicial / 100) * precioInicial;
+      const costeNoCombustibleKm = Math.max(0, costeKmParam - costeCombustibleKm);
+      extraKmEl.value = costeNoCombustibleKm.toFixed(2);
+    }
+  }
+
+  function formatEuro(num) {
+    return num.toLocaleString("en-US", {
+      style: "currency",
+      currency: "EUR",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function formatKm(num) {
+    return num.toLocaleString("en-US", {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    }) + " km";
+  }
+
+  function getValues() {
+    return {
+      consumo: parseFloat(consumoEl.value),
+      precio: parseFloat(precioEl.value),
+      desvio: parseFloat(desvioEl.value),
+      diferencia: parseFloat(diferenciaEl.value),
+      litros: parseFloat(litrosEl.value),
+      extraKm: parseFloat(extraKmEl.value) || 0
+    };
+  }
+
+  function valuesAreValid(v) {
+    return [v.consumo, v.precio, v.desvio, v.diferencia, v.litros, v.extraKm].every(
+      n => !isNaN(n) && n >= 0
+    ) && v.consumo > 0 && v.precio > 0;
+  }
+
+  function actualizarHint(linkCosteMensual) {
+    if (hintCosteKmEl && vieneDeCosteMensual) {
+      hintCosteKmEl.innerHTML = `
+        You are using a full cost per km calculated from the monthly car cost.
+        You can edit it manually or calculate the real monthly car cost <a href="${linkCosteMensual}">here</a>.
+      `;
+    }
+  }
+
+  if (toggleAdvancedEl && advancedBlockEl) {
+    toggleAdvancedEl.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const isHidden = advancedBlockEl.style.display === "none";
+      advancedBlockEl.style.display = isHidden ? "block" : "none";
+
+      toggleAdvancedEl.textContent = isHidden
+        ? "Hide full car cost"
+        : "Use full car cost →";
+
+      if (hintCosteKmEl && !vieneDeCosteMensual) {
+        if (isHidden) {
+          const linkCosteMensual = buildUrl(
+            "https://dcsolanaprojects.github.io/en/monthly-car-cost/",
+            {
+              consumo: consumoEl.value,
+              precio: precioEl.value,
+              desvio: desvioEl.value,
+              diferencia: diferenciaEl.value,
+              litros: litrosEl.value,
+              return: "gasolina"
+            }
+          );
+
+          hintCosteKmEl.innerHTML = `
+            Enter the total cost of your car per km here, including maintenance, insurance or depreciation if you want a more accurate calculation.
+            If you do not know it, you can calculate the real monthly car cost <a href="${linkCosteMensual}">here</a>.
+          `;
+        } else {
+          hintCosteKmEl.innerHTML = hintDefault;
+        }
+      }
+    });
+  }
+
+  if (vieneDeCosteMensual && advancedBlockEl) {
+    advancedBlockEl.style.display = "block";
+    if (toggleAdvancedEl) {
+      toggleAdvancedEl.textContent = "Hide full car cost";
+    }
+  }
+
+  function calcularAutomatico() {
+    const v = getValues();
+
+    if (!valuesAreValid(v)) {
+      resultadoEl.className = "result bad";
+      resultadoEl.textContent = "Check your inputs: enter valid values.";
+      detalleEl.innerHTML = "";
+      accionesEl.innerHTML = "";
+      return;
+    }
+
+    const kmDesvioTotal = v.desvio * 2;
+    const costeCombustibleDesvio = (kmDesvioTotal * v.consumo / 100) * v.precio;
+    const costeOtros = kmDesvioTotal * v.extraKm;
+    const costeRealDesvio = costeCombustibleDesvio + costeOtros;
+
+    const ahorroBruto = v.litros * v.diferencia;
+    const ahorroReal = ahorroBruto - costeRealDesvio;
+
+    const costeKmParaLimite = (v.consumo / 100) * v.precio + v.extraKm;
+
+    const desvioMax = v.diferencia > 0 && v.litros > 0 && costeKmParaLimite > 0
+      ? (v.litros * v.diferencia) / (2 * costeKmParaLimite)
+      : 0;
+
+    if (v.diferencia <= 0 || v.litros <= 0) {
+      resultadoEl.className = "result neutral";
+      resultadoEl.textContent = "With these values there is no potential saving to compare.";
+    } else if (ahorroReal > 0.05) {
+      resultadoEl.className = "result ok";
+      resultadoEl.textContent = `It is worth it. You save approximately ${formatEuro(ahorroReal)}.`;
+    } else if (ahorroReal < -0.05) {
+      resultadoEl.className = "result bad";
+      resultadoEl.textContent = `It is not worth it. You would lose ${formatEuro(Math.abs(ahorroReal))} with that detour.`;
+    } else {
+      resultadoEl.className = "result neutral";
+      resultadoEl.textContent = "You are almost at break-even. The real difference is minimal.";
+    }
+
+    let textoLimite = "With these values, almost no detour is worth it.";
+    if (isFinite(desvioMax) && desvioMax > 0) {
+      textoLimite = `${formatKm(desvioMax)} (one way)`;
+    }
+
+    const linkCosteKm = buildUrl(
+      "https://dcsolanaprojects.github.io/en/car-cost-per-km/",
+      {
+        consumo: v.consumo,
+        precio: v.precio,
+        extraCoste: v.extraKm,
+        desvio: v.desvio,
+        diferencia: v.diferencia,
+        litros: v.litros,
+        return: "gasolina"
+      }
+    );
+
+    const linkCosteMensual = buildUrl(
+      "https://dcsolanaprojects.github.io/en/monthly-car-cost/",
+      {
+        consumo: v.consumo,
+        precio: v.precio,
+        desvio: v.desvio,
+        diferencia: v.diferencia,
+        litros: v.litros,
+        return: "gasolina"
+      }
+    );
+
+    const linkSupermercado = buildUrl(
+      "https://dcsolanaprojects.github.io/en/supermarket-trip-calculator/",
+      {
+        consumo: v.consumo,
+        precio: v.precio,
+        extraCoste: v.extraKm,
+        desvio: v.desvio
+      }
+    );
+
+    actualizarHint(linkCosteMensual);
+
+    detalleEl.innerHTML = `
+      <strong>Gross saving:</strong> ${formatEuro(ahorroBruto)}<br>
+      <strong>Fuel cost of the detour:</strong> ${formatEuro(costeCombustibleDesvio)}<br>
+      <strong>Other car costs:</strong> ${v.extraKm > 0 ? formatEuro(costeOtros) : "not included"}<br>
+      <strong>Real cost of the detour:</strong> ${formatEuro(costeRealDesvio)}<br>
+      <strong>Real saving:</strong> ${formatEuro(ahorroReal)}<br>
+      <strong>Maximum profitable detour:</strong> ${textoLimite}<br><br>
+      <span class="calc-note">This calculation can include the total car cost per km, not only fuel, if you have added other costs.</span>
+    `;
+
+    accionesEl.innerHTML = `
+      <strong>Use this result</strong>
+      <a class="action-card" href="${linkCosteKm}"><span>See real cost per km →</span><small>Review the cost per kilometer used in this calculation.</small></a>
+      <a class="action-card" href="${linkCosteMensual}"><span>Calculate monthly car cost →</span><small>Estimate how much your car costs per month and per year.</small></a>
+      <a class="action-card" href="${linkSupermercado}"><span>Check another supermarket with these values →</span><small>Use consumption, price and full cost per km in another saving decision.</small></a>
+    `;
+  }
+
+  [consumoEl, precioEl, desvioEl, diferenciaEl, litrosEl, extraKmEl].forEach(input => {
+    input.addEventListener("input", calcularAutomatico);
+  });
+
+  resetBtn.addEventListener("click", () => {
+    setTimeout(calcularAutomatico, 0);
+  });
+
+  calcularAutomatico();
+</script>
+</body>
+</html>
