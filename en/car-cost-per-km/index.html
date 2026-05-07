@@ -1,0 +1,533 @@
+# /en/car-cost-per-km/index.html
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>How much does your car cost per km? Calculate the real cost</title>
+  <meta name="description" content="Calculate the real cost per kilometer of your car including fuel and other costs. Find out how much every trip really costs you.">
+  <meta name="robots" content="index,follow" />
+
+  <link rel="canonical" href="https://dcsolanaprojects.github.io/en/car-cost-per-km/" />
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: #ffffff;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      color: #0f172a;
+    }
+
+    p {
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    .lead {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #374151;
+    }
+
+    input {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      font-size: 16px;
+      background: #f9fafb;
+      color: #111827;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #4b5563;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .hint a {
+      color: #2563eb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .hint a:hover {
+      text-decoration: underline;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 12px;
+      background: #e0e7ff;
+      color: #3730a3;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .breakdown {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fafafa;
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    .breakdown:empty {
+      display: none;
+    }
+
+    .action-box:empty {
+      display: none;
+    }
+
+    .action-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .action-box strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    .action-card {
+      display: block;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      text-decoration: none;
+    }
+
+    .action-card:hover {
+      text-decoration: none;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .action-card span {
+      display: block;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .action-card small {
+      display: block;
+      margin-top: 4px;
+      color: #6b7280;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .related-tools {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    .related-tools strong {
+      display: none;
+    }
+
+    .related-tools a {
+      color: #6b7280;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .related-tools a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-link {
+      margin-top: 18px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .footer-link a {
+      color: #6b7280;
+      text-decoration: none;
+    }
+
+    .footer-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      .container { padding: 20px 16px; }
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 24px; }
+      p { font-size: 16px; line-height: 1.6; }
+    }
+  </style>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-TXNSN93S5L', {
+      page_title: 'Car cost per km',
+      page_path: '/en/car-cost-per-km/'
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>How much does your car cost per km?</h1>
+
+    <p class="lead">
+      Calculate how much every kilometer you drive really costs.
+    </p>
+
+    <p>
+      You can calculate fuel cost only or add an extra cost per kilometer to include maintenance, insurance, taxes or depreciation.
+    </p>
+
+    <div class="grid">
+      <div class="field">
+        <label for="consumo">Fuel consumption (L/100 km)</label>
+        <input id="consumo" type="number" value="6.5" step="0.1" min="0" inputmode="decimal">
+      </div>
+
+      <div class="field">
+        <label for="precio">Fuel price (€/L)</label>
+        <input id="precio" type="number" value="1.55" step="0.01" min="0" inputmode="decimal">
+      </div>
+
+      <div class="field full">
+        <label for="extraCoste">Extra cost per km (optional)</label>
+        <input id="extraCoste" type="number" step="0.01" min="0" placeholder="Example: 0.05" inputmode="decimal">
+
+        <div class="hint" id="hintCosteKm">
+          Leave empty if you only want to calculate fuel cost. If you want to include maintenance, insurance, taxes or depreciation, first calculate the
+          <a id="linkHintCosteMensual" href="https://dcsolanaprojects.github.io/en/monthly-car-cost/">real monthly car cost</a>.
+        </div>
+      </div>
+    </div>
+
+    <div id="resultado" class="result">
+      Enter your data to see the result.
+    </div>
+
+    <div id="volverLink" class="hint"></div>
+
+    <div id="detalle" class="breakdown"></div>
+
+    <div id="acciones" class="action-box"></div>
+
+    <div class="related-tools">
+      <strong>Related tools</strong>
+      <a href="https://dcsolanaprojects.github.io/en/monthly-car-cost/">Monthly car cost</a> ·
+      <a href="https://dcsolanaprojects.github.io/en/gas-station-calculator/">Cheaper gas station</a> ·
+      <a href="https://dcsolanaprojects.github.io/en/supermarket-trip-calculator/">Another supermarket</a>
+    </div>
+
+    <div class="footer-link">
+      <a href="https://dcsolanaprojects.github.io/en/">View all tools →</a>
+    </div>
+  </div>
+
+  <script>
+    const consumoEl = document.getElementById("consumo");
+    const precioEl = document.getElementById("precio");
+    const extraCosteEl = document.getElementById("extraCoste");
+    const resultadoEl = document.getElementById("resultado");
+
+    const volverLinkEl = document.getElementById("volverLink");
+    const detalleEl = document.getElementById("detalle");
+    const accionesEl = document.getElementById("acciones");
+    const hintCosteKmEl = document.getElementById("hintCosteKm");
+    const linkHintCosteMensualEl = document.getElementById("linkHintCosteMensual");
+
+    const params = new URLSearchParams(window.location.search);
+    const returnTo = params.get("return");
+
+    function setValueFromParam(input, paramName) {
+      const value = params.get(paramName);
+      if (value !== null && value !== "") {
+        input.value = value;
+      }
+    }
+
+    setValueFromParam(consumoEl, "consumo");
+    setValueFromParam(precioEl, "precio");
+    setValueFromParam(extraCosteEl, "extraCoste");
+
+    const costeKmParam = parseFloat(params.get("costeKm"));
+
+    if (!isNaN(costeKmParam) && costeKmParam > 0 && !params.get("extraCoste")) {
+      const consumoInicial = parseFloat(consumoEl.value);
+      const precioInicial = parseFloat(precioEl.value);
+
+      if (!isNaN(consumoInicial) && !isNaN(precioInicial) && consumoInicial > 0 && precioInicial > 0) {
+        const costeCombustibleKm = (consumoInicial / 100) * precioInicial;
+        const costeNoCombustibleKm = Math.max(0, costeKmParam - costeCombustibleKm);
+        extraCosteEl.value = costeNoCombustibleKm.toFixed(2);
+      }
+    }
+
+    function formatEuro(num) {
+      return num.toLocaleString("en-US", {
+        style: "currency",
+        currency: "EUR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatNumber(num) {
+      return num.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function formatKmCost(num) {
+      return num.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function buildUrl(baseUrl, overrides = {}) {
+      const query = new URLSearchParams(window.location.search);
+
+      Object.entries(overrides).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          query.set(key, value);
+        } else {
+          query.delete(key);
+        }
+      });
+
+      return `${baseUrl}?${query.toString()}`;
+    }
+
+    function getParamValue(paramName) {
+      const value = params.get(paramName);
+      return value !== null && value !== "" ? value : null;
+    }
+
+    function copyKnownParams(target) {
+      [
+        "kmAnuales",
+        "seguroAnual",
+        "mantenimientoAnual",
+        "otrosAnuales",
+        "depreciacionAnual",
+        "financiacionAnual",
+        "desvio",
+        "diferencia",
+        "litros",
+        "ahorroCompra",
+        "origen"
+      ].forEach(param => {
+        const value = params.get(param);
+        if (value !== null && value !== "") {
+          target[param] = value;
+        }
+      });
+
+      return target;
+    }
+
+    function hasMonthlyBreakdown() {
+      return params.get("kmAnuales") !== null;
+    }
+
+    function getAnnualParam(paramName) {
+      const value = parseFloat(params.get(paramName));
+      return !isNaN(value) && value >= 0 ? value : 0;
+    }
+
+    function buildMonthlyBreakdownHtml(kmAnuales) {
+      if (!hasMonthlyBreakdown() || isNaN(kmAnuales) || kmAnuales <= 0) {
+        return "";
+      }
+
+      const seguroAnual = getAnnualParam("seguroAnual");
+      const mantenimientoAnual = getAnnualParam("mantenimientoAnual");
+      const otrosAnuales = getAnnualParam("otrosAnuales");
+      const depreciacionAnual = getAnnualParam("depreciacionAnual");
+      const financiacionAnual = getAnnualParam("financiacionAnual");
+
+      const totalOtrosAnual =
+        seguroAnual +
+        mantenimientoAnual +
+        otrosAnuales +
+        depreciacionAnual +
+        financiacionAnual;
+
+      if (totalOtrosAnual <= 0) {
+        return "";
+      }
+
+      return `
+        <br>
+        <strong>Breakdown received from monthly cost:</strong><br>
+        Insurance: ${formatNumber(seguroAnual / kmAnuales)} €/km<br>
+        Maintenance: ${formatNumber(mantenimientoAnual / kmAnuales)} €/km<br>
+        Taxes, inspection and others: ${formatNumber(otrosAnuales / kmAnuales)} €/km<br>
+        Depreciation: ${formatNumber(depreciacionAnual / kmAnuales)} €/km<br>
+        Financing/interests: ${formatNumber(financiacionAnual / kmAnuales)} €/km<br>
+        <strong>Total non-fuel costs:</strong> ${formatNumber(totalOtrosAnual / kmAnuales)} €/km<br>
+        <span class="hint">If you manually modify the extra cost per km, you adjust the aggregated value but not the original yearly breakdown.</span>
+      `;
+    }
+
+    function actualizarHint() {
+      const vieneDeCosteMensual =
+        params.get("origen") === "coste-mensual" ||
+        params.get("kmAnuales") !== null;
+
+      const linkCosteMensual = buildUrl(
+        "https://dcsolanaprojects.github.io/en/monthly-car-cost/",
+        {
+          consumo: consumoEl.value,
+          precio: precioEl.value,
+          return: "car-cost-per-km"
+        }
+      );
+
+      if (linkHintCosteMensualEl) {
+        linkHintCosteMensualEl.href = linkCosteMensual;
+      }
+
+      if (hintCosteKmEl && vieneDeCosteMensual) {
+        hintCosteKmEl.innerHTML = `
+          You are using a full cost per km calculated from the monthly car cost.
+          You can modify it manually or adjust the monthly car cost
+          <a href="${linkCosteMensual}">here</a>.
+        `;
+      }
+    }
+
+    function calcular() {
+      const consumo = parseFloat(consumoEl.value);
+      const precio = parseFloat(precioEl.value);
+      const extra = parseFloat(extraCosteEl.value) || 0;
+
+      if (isNaN(consumo) || isNaN(precio) || consumo <= 0 || precio <= 0 || extra < 0) {
+        resultadoEl.textContent = "Enter valid values.";
+        volverLinkEl.innerHTML = "";
+        detalleEl.innerHTML = "";
+        accionesEl.innerHTML = "";
+        return;
+      }
+
+      const combustibleKm = (consumo / 100) * precio;
+      const totalKm = combustibleKm + extra;
+      const coste5km = totalKm * 5;
+
+      resultadoEl.innerHTML = `
+        Your car costs approximately <strong>${formatKmCost(totalKm)} €/km</strong>.
+        <br><br>
+        ${formatKmCost(combustibleKm)} €/km fuel + ${formatKmCost(extra)} €/km additional cost
+      `;
+
+      const kmAnualesParam = parseFloat(params.get("kmAnuales"));
+      const desgloseMensualHtml = buildMonthlyBreakdownHtml(kmAnualesParam);
+
+      detalleEl.innerHTML = `
+        <strong>Cost per km:</strong><br>
+        Fuel: ${formatKmCost(combustibleKm)} €/km<br>
+        Additional cost: ${formatKmCost(extra)} €/km<br>
+        Total: ${formatKmCost(totalKm)} €/km<br>
+        ${desgloseMensualHtml}
+        <br>
+        <strong>Quick examples:</strong><br>
+        10 km → ${formatEuro(totalKm * 10)}<br>
+        50 km → ${formatEuro(totalKm * 50)}<br>
+        100 km → ${formatEuro(totalKm * 100)}<br><br>
+        Driving 5 extra km costs approximately ${formatEuro(coste5km)}.
+      `;
+
+      actualizarHint();
+    }
+
+    consumoEl.addEventListener("input", calcular);
+    precioEl.addEventListener("input", calcular);
+    extraCosteEl.addEventListener("input", calcular);
+
+    calcular();
+  </script>
+</body>
+</html>
+```
