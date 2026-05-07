@@ -501,7 +501,7 @@ gtag('config', 'G-TXNSN93S5L', {
 <body>
   <div class="container">
     <div class="lang-switch">
-  <a href="/en/gas-station-calculator/" hreflang="en">English version</a>
+  <a href="/en/gas-station-calculator/" id="langSwitchLink" hreflang="en">English version</a>
 </div>
     <h1>¿Compensa ir a una gasolinera más barata?</h1>
     <p class="lead">Comprueba en segundos si te compensa desviarte para repostar gasolina más barata.</p>
@@ -638,8 +638,9 @@ Con esta calculadora puedes estimar el ahorro real en segundos y decidir si mere
   const toggleAdvancedEl = document.getElementById("toggleAdvanced");
   const advancedBlockEl = document.getElementById("advancedBlock");
   const hintCosteKmEl = document.getElementById("hintCosteKm");
+const langSwitchLinkEl = document.getElementById("langSwitchLink");
 
-  const params = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(window.location.search);
 
   const vieneDeCosteMensual =
     params.get("origen") === "coste-mensual" ||
@@ -772,10 +773,42 @@ Con esta calculadora puedes estimar el ahorro real en segundos y decidir si mere
       toggleAdvancedEl.textContent = "Ocultar coste completo del coche";
     }
   }
+function actualizarLangSwitch() {
+  if (!langSwitchLinkEl) return;
 
+  const v = getValues();
+
+  const langParams = new URLSearchParams();
+
+  if (!isNaN(v.consumo)) langParams.set("consumo", v.consumo);
+  if (!isNaN(v.precio)) langParams.set("precio", v.precio);
+  if (!isNaN(v.desvio)) langParams.set("desvio", v.desvio);
+  if (!isNaN(v.diferencia)) langParams.set("diferencia", v.diferencia);
+  if (!isNaN(v.litros)) langParams.set("litros", v.litros);
+  if (!isNaN(v.extraKm)) langParams.set("extraCoste", v.extraKm);
+
+  [
+    "kmAnuales",
+    "seguroAnual",
+    "mantenimientoAnual",
+    "otrosAnuales",
+    "depreciacionAnual",
+    "financiacionAnual",
+    "ahorroCompra",
+    "origen",
+    "return"
+  ].forEach(param => {
+    const value = params.get(param);
+    if (value !== null && value !== "") {
+      langParams.set(param, value);
+    }
+  });
+
+  langSwitchLinkEl.href = `/en/gas-station-calculator/?${langParams.toString()}`;
+}
   function calcularAutomatico() {
     const v = getValues();
-
+actualizarLangSwitch();
     if (!valuesAreValid(v)) {
       resultadoEl.className = "result bad";
       resultadoEl.textContent = "Revisa los datos: introduce valores válidos.";
