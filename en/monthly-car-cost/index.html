@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How much does it cost to own a car per month? Real calculator</title>
+  <meta name="description" content="Calculate how much it costs to own a car per month including fuel, insurance, maintenance, taxes and depreciation. Estimate the real yearly and per-kilometer cost.">
+  <meta name="robots" content="index,follow" />
+  <meta name="author" content="Daniel Cabrera" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="How much does it cost to own a car per month?" />
+  <meta property="og:description" content="Calculate the real monthly cost of your car including fuel, insurance, maintenance, taxes and depreciation." />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Monthly car cost calculator" />
+  <meta name="twitter:description" content="Find out how much your car really costs per month, per year and per kilometer." />
+  <link rel="canonical" href="https://dcsolanaprojects.github.io/en/monthly-car-cost/" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f3f4f6; color: #111827; padding: 20px; }
+    .container { max-width: 720px; margin: auto; background: #ffffff; padding: 28px; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+    h1 { margin-top: 0; margin-bottom: 14px; font-size: 28px; letter-spacing: -0.5px; line-height: 1.15; color: #0f172a; }
+    h2 { margin-top: 22px; margin-bottom: 8px; font-size: 17px; line-height: 1.25; color: #0f172a; }
+    p { margin: 6px 0; color: #4b5563; line-height: 1.5; }
+    .lead { font-weight: 700; color: #111827; }
+    .intro { color: #4b5563; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+    .field { display: flex; flex-direction: column; }
+    label { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+    input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; font-size: 16px; background: #f9fafb; color: #111827; transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease; }
+    input:focus { outline: none; border-color: #2563eb; background: #ffffff; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    .hint { font-size: 12px; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+    .buttons { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    button { padding: 14px 18px; border-radius: 10px; font-size: 16px; cursor: pointer; border: none; }
+    .btn-reset { background: #e5e7eb; color: #111827; font-weight: 600; }
+    .btn-reset:hover { background: #d1d5db; }
+    .result { margin-top: 24px; padding: 18px; border-radius: 12px; display: block; font-weight: 700; line-height: 1.45; }
+    .neutral { background: #e0e7ff; color: #3730a3; }
+    .bad { background: #fee2e2; color: #991b1b; }
+    .breakdown { margin-top: 12px; padding: 14px 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; color: #374151; font-size: 14px; line-height: 1.6; display: block; }
+
+    .action-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .action-box strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #111827;
+    }
+
+    .action-card {
+      display: block;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      text-decoration: none;
+    }
+
+    .action-card:hover {
+      text-decoration: none;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+    }
+
+    .action-card span {
+      display: block;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .action-card small {
+      display: block;
+      margin-top: 4px;
+      color: #6b7280;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
+    .insight-box { margin-top: 12px; padding: 14px 16px; border-radius: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; font-size: 14px; line-height: 1.6; }
+    a { color: #2563eb; font-weight: 600; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .faq-block { margin-top: 22px; padding: 14px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fafafa; }
+    .faq-block h2 { margin-top: 0; margin-bottom: 10px; }
+    .faq-item { border-top: 1px solid #e5e7eb; padding: 8px 0; }
+    .faq-item:first-of-type { border-top: none; padding-top: 0; }
+    .faq-item summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-question { font-size: 16px; font-weight: 700; color: #111827; line-height: 1.35; flex: 1; }
+    .faq-icon { width: 20px; height: 20px; min-width: 20px; border-radius: 50%; background: #e5e7eb; position: relative; flex-shrink: 0; }
+    .faq-icon::before, .faq-icon::after { content: ""; position: absolute; background: #6b7280; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+    .faq-icon::before { width: 10px; height: 2px; }
+    .faq-icon::after { width: 2px; height: 10px; }
+    .faq-item[open] .faq-icon::after { display: none; }
+    .faq-item p { margin: 8px 0 0; color: #374151; line-height: 1.55; }
+    .footer-link { margin-top: 18px; font-size: 13px; color: #6b7280; text-align: center; }
+    .footer-link a { color: #6b7280; text-decoration: none; }
+    .footer-link a:hover { text-decoration: underline; }
+    @media (max-width: 600px) { body { padding: 12px; } .container { padding: 20px 16px; border-radius: 12px; } h1 { font-size: 24px; line-height: 1.15; } p { font-size: 16px; line-height: 1.6; } .grid { grid-template-columns: 1fr; gap: 14px; } .buttons { flex-direction: column; } button { width: 100%; } .faq-question { font-size: 15px; } .faq-item p { font-size: 15px; } }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXNSN93S5L"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TXNSN93S5L', { page_title: 'Monthly car cost', page_path: '/en/monthly-car-cost/' });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>How much does it cost to own a car per month?</h1>
+    <p class="lead">Calculate the real monthly cost of owning a car, not just what you spend on fuel.</p>
+    <p class="intro">Enter your mileage, fuel consumption, insurance, maintenance, taxes and depreciation to estimate how much your car costs per month, per year and per kilometer.</p>
+    <form id="form">
+      <div class="grid">
+        <div class="field"><label for="kmAnuales">Kilometers per year</label><input type="number" id="kmAnuales" value="12000" step="500" min="0" inputmode="decimal"><div class="hint">Insurance and maintenance are usually estimated in km/year.</div></div>
+        <div class="field"><label for="consumo">Fuel consumption (L/100 km)</label><input type="number" id="consumo" value="6.5" step="0.1" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="precio">Fuel price (€/L)</label><input type="number" id="precio" value="1.55" step="0.01" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="seguroAnual">Annual insurance (€)</label><input type="number" id="seguroAnual" value="500" step="10" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="mantenimientoAnual">Annual maintenance (€)</label><input type="number" id="mantenimientoAnual" value="400" step="10" min="0" inputmode="decimal"><div class="hint">Servicing, tires, average repairs, oil, brakes...</div></div>
+        <div class="field"><label for="otrosAnuales">Taxes, inspection and other costs (€ / year)</label><input type="number" id="otrosAnuales" value="150" step="10" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="depreciacionAnual">Annual depreciation (€)</label><input type="number" id="depreciacionAnual" value="1500" step="50" min="0" inputmode="decimal"><div class="hint">Estimated loss of value each year.</div></div>
+        <div class="field"><label for="financiacionAnual">Financing/interest (€ / year) optional</label><input type="number" id="financiacionAnual" placeholder="Example: 300" step="10" min="0" inputmode="decimal"></div>
+      </div>
+      <div class="buttons"><button type="reset" class="btn-reset" id="resetBtn">Reset</button></div>
+    </form>
+    <div id="resultado" class="result neutral">Enter your data to see the result.</div>
+    <div id="detalle" class="breakdown"></div>
+    <div id="insights" class="insight-box"></div>
+    <div id="acciones" class="action-box"></div>
+    <h2>What does this calculator include?</h2>
+    <p>The real cost of a car is not just fuel. You also need to include insurance, maintenance, taxes, inspection, depreciation and, if applicable, financing. That is why two cars with the same fuel consumption can have very different monthly costs.</p>
+    <p>This calculator gives you a quick and realistic estimate. It does not replace exact accounting, but it helps you see how much owning a car really costs and which part of the cost weighs the most.</p>
+    <h2>How to interpret the result</h2>
+    <p>The monthly cost lets you compare the car with other fixed expenses. The yearly cost shows the total impact on your budget. The cost per kilometer helps you evaluate specific trips, detours to cheaper gas stations or drives to save money on shopping.</p>
+    <div class="faq-block">
+      <h2>FAQ</h2>
+      <details class="faq-item"><summary><span class="faq-question">How much does it cost to own a car per month?</span><span class="faq-icon"></span></summary><p>It depends heavily on usage, insurance, the type of car and depreciation. For many private cars, the real cost can be much higher than the monthly fuel bill once insurance, maintenance and taxes are included.</p></details>
+      <details class="faq-item"><summary><span class="faq-question">Why include depreciation?</span><span class="faq-icon"></span></summary><p>Because even if you do not pay it every month, your car loses value over time. If you buy a car for one amount and sell it years later for less, that difference is also part of the real cost of owning it.</p></details>
+      <details class="faq-item"><summary><span class="faq-question">Is it better to calculate monthly or yearly mileage?</span><span class="faq-icon"></span></summary><p>For car usage, yearly mileage is usually more practical because insurance, maintenance and inspections are often considered yearly. The monthly result is more useful to understand the impact on your budget.</p></details>
+      <details class="faq-item"><summary><span class="faq-question">Can this calculator compare cars?</span><span class="faq-icon"></span></summary><p>Yes. You can change consumption, insurance, maintenance and depreciation to compare two different cars and see which one has a lower monthly cost beyond the purchase price.</p></details>
+    </div>
+    <div class="footer-link"><a href="https://dcsolanaprojects.github.io/en/">View all tools →</a></div>
+  </div>
+  <script>
+    const kmAnualesEl = document.getElementById("kmAnuales");
+    const consumoEl = document.getElementById("consumo");
+    const precioEl = document.getElementById("precio");
+    const seguroAnualEl = document.getElementById("seguroAnual");
+    const mantenimientoAnualEl = document.getElementById("mantenimientoAnual");
+    const otrosAnualesEl = document.getElementById("otrosAnuales");
+    const depreciacionAnualEl = document.getElementById("depreciacionAnual");
+    const financiacionAnualEl = document.getElementById("financiacionAnual");
+    const resultadoEl = document.getElementById("resultado");
+    const detalleEl = document.getElementById("detalle");
+    const insightsEl = document.getElementById("insights");
+    const accionesEl = document.getElementById("acciones");
+    const resetBtn = document.getElementById("resetBtn");
+    const params = new URLSearchParams(window.location.search);
+    function setValueFromParam(input, paramName) { const value = params.get(paramName); if (value !== null && value !== "") input.value = value; }
+    setValueFromParam(kmAnualesEl, "kmAnuales"); setValueFromParam(consumoEl, "consumo"); setValueFromParam(precioEl, "precio"); setValueFromParam(seguroAnualEl, "seguroAnual"); setValueFromParam(mantenimientoAnualEl, "mantenimientoAnual"); setValueFromParam(otrosAnualesEl, "otrosAnuales"); setValueFromParam(depreciacionAnualEl, "depreciacionAnual"); setValueFromParam(financiacionAnualEl, "financiacionAnual");
+    function formatEuro(num) { return num.toLocaleString("en-US", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function formatNumber(num) { return num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function formatPercent(num) { return num.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + "%"; }
+    function buildUrl(baseUrl, data) { const query = new URLSearchParams(data); return `${baseUrl}?${query.toString()}`; }
+    function getValues() { return { kmAnuales: parseFloat(kmAnualesEl.value), consumo: parseFloat(consumoEl.value), precio: parseFloat(precioEl.value), seguroAnual: parseFloat(seguroAnualEl.value) || 0, mantenimientoAnual: parseFloat(mantenimientoAnualEl.value) || 0, otrosAnuales: parseFloat(otrosAnualesEl.value) || 0, depreciacionAnual: parseFloat(depreciacionAnualEl.value) || 0, financiacionAnual: parseFloat(financiacionAnualEl.value) || 0 }; }
+    function valuesAreValid(v) { return [v.kmAnuales, v.consumo, v.precio, v.seguroAnual, v.mantenimientoAnual, v.otrosAnuales, v.depreciacionAnual, v.financiacionAnual].every(n => !isNaN(n) && n >= 0) && v.kmAnuales > 0 && v.consumo > 0 && v.precio > 0; }
+    function getMaxPart(parts) { return parts.reduce((max, part) => part.value > max.value ? part : max, parts[0]); }
+    let hasTrackedCalculation = false;
+    function trackEvent(eventName, params) { if (typeof gtag === "function") gtag("event", eventName, params || {}); }
+    function calcularAutomatico() {
+      const v = getValues();
+      if (!valuesAreValid(v)) { resultadoEl.className = "result bad"; resultadoEl.textContent = "Check your inputs: enter valid values."; detalleEl.innerHTML = ""; insightsEl.innerHTML = ""; accionesEl.innerHTML = ""; return; }
+      const litrosAnuales = (v.kmAnuales * v.consumo) / 100;
+      const combustibleAnual = litrosAnuales * v.precio;
+      const costeFijoAnual = v.seguroAnual + v.mantenimientoAnual + v.otrosAnuales + v.depreciacionAnual + v.financiacionAnual;
+      const totalAnual = combustibleAnual + costeFijoAnual;
+      const totalMensual = totalAnual / 12;
+      const costeKm = totalAnual / v.kmAnuales;
+      const costeCombustibleKm = combustibleAnual / v.kmAnuales;
+      const extraCosteKm = Math.max(0, costeKm - costeCombustibleKm);
+      const parts = [{ name: "fuel", value: combustibleAnual }, { name: "insurance", value: v.seguroAnual }, { name: "maintenance", value: v.mantenimientoAnual }, { name: "taxes/inspection/other costs", value: v.otrosAnuales }, { name: "depreciation", value: v.depreciacionAnual }, { name: "financing", value: v.financiacionAnual }];
+      const maxPart = getMaxPart(parts);
+      const maxPartPercent = totalAnual > 0 ? (maxPart.value / totalAnual) * 100 : 0;
+      resultadoEl.className = "result neutral";
+      resultadoEl.innerHTML = `Your car costs approximately <strong>${formatEuro(totalMensual)} per month</strong>.<br><br>${formatEuro(totalAnual)} per year · ${formatNumber(costeKm)} €/km`;
+      detalleEl.innerHTML = `<strong>Annual fuel cost:</strong> ${formatEuro(combustibleAnual)} (${formatEuro(combustibleAnual / 12)} / month)<br><strong>Annual insurance:</strong> ${formatEuro(v.seguroAnual)} (${formatEuro(v.seguroAnual / 12)} / month)<br><strong>Annual maintenance:</strong> ${formatEuro(v.mantenimientoAnual)} (${formatEuro(v.mantenimientoAnual / 12)} / month)<br><strong>Taxes, inspection and other costs:</strong> ${formatEuro(v.otrosAnuales)} (${formatEuro(v.otrosAnuales / 12)} / month)<br><strong>Annual depreciation:</strong> ${formatEuro(v.depreciacionAnual)} (${formatEuro(v.depreciacionAnual / 12)} / month)<br><strong>Financing/interest:</strong> ${v.financiacionAnual > 0 ? formatEuro(v.financiacionAnual) + " (" + formatEuro(v.financiacionAnual / 12) + " / month)" : "not included"}<br><strong>Approximate monthly kilometers:</strong> ${formatNumber(v.kmAnuales / 12)} km/month<br><br><strong>Cost per km:</strong><br>Fuel: ${formatNumber(costeCombustibleKm)} €/km<br>Other costs: ${formatNumber(extraCosteKm)} €/km<br>Total: ${formatNumber(costeKm)} €/km`;
+      const ahorroMenos1000Km = costeKm * 1000;
+      const ahorroDiesCentimos = litrosAnuales * 0.10;
+      insightsEl.innerHTML = `<strong>Quick read:</strong><br>Your biggest cost category is <strong>${maxPart.name}</strong>, at approximately ${formatPercent(maxPartPercent)} of the yearly cost.<br>Driving 1,000 km less per year would avoid around ${formatEuro(ahorroMenos1000Km)} in costs.<br>Paying €0.10/L less for fuel would save around ${formatEuro(ahorroDiesCentimos)} per year.`;
+      const commonParams = {
+        consumo: v.consumo,
+        precio: v.precio,
+        extraCoste: extraCosteKm.toFixed(4),
+        costeKm: costeKm.toFixed(4),
+        kmAnuales: v.kmAnuales,
+        seguroAnual: v.seguroAnual,
+        mantenimientoAnual: v.mantenimientoAnual,
+        otrosAnuales: v.otrosAnuales,
+        depreciacionAnual: v.depreciacionAnual,
+        financiacionAnual: v.financiacionAnual,
+        return: "coste-mensual"
+      };
+      const costeKmUrl = buildUrl("https://dcsolanaprojects.github.io/en/car-cost-per-km/", commonParams);
+      const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/en/gas-station-calculator/", commonParams);
+      const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/en/supermarket-trip-calculator/", commonParams);
+      accionesEl.innerHTML = `<strong>Use this result</strong>
+        <a class="action-card" href="${costeKmUrl}" data-tool-link="coste-km"><span>View cost per kilometer →</span><small>Use the total cost and non-fuel costs per km.</small></a>
+        <a class="action-card" href="${gasolinaUrl}" data-tool-link="gasolina"><span>Save on fuel with these values →</span><small>Check whether a cheaper gas station is worth it including the real cost of the detour.</small></a>
+        <a class="action-card" href="${supermercadoUrl}" data-tool-link="supermercado"><span>Evaluate another supermarket with these values →</span><small>Calculate whether shopping savings are higher than the real cost of the trip.</small></a>`;
+      if (!hasTrackedCalculation) { trackEvent("calculate_monthly_car_cost", { coste_mensual: Number(totalMensual.toFixed(2)), coste_km: Number(costeKm.toFixed(4)) }); hasTrackedCalculation = true; }
+    }
+    [kmAnualesEl, consumoEl, precioEl, seguroAnualEl, mantenimientoAnualEl, otrosAnualesEl, depreciacionAnualEl, financiacionAnualEl].forEach(input => input.addEventListener("input", calcularAutomatico));
+    accionesEl.addEventListener("click", function(event) { const link = event.target.closest("a[data-tool-link]"); if (!link) return; trackEvent("click_related_tool", { destination_tool: link.getAttribute("data-tool-link"), origen: "monthly_car_cost" }); });
+    resetBtn.addEventListener("click", () => { setTimeout(calcularAutomatico, 0); });
+    calcularAutomatico();
+  </script>
+</body>
+</html>
