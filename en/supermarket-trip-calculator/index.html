@@ -8,7 +8,7 @@
   <meta name="description" content="Calculate whether it is worth driving to another, cheaper supermarket by considering shopping savings, detour distance, fuel consumption and real car cost.">
   <meta name="robots" content="index,follow" />
 
-  <link rel="canonical" href="https://dcsolanaprojects.github.io/en/en/supermarket-trip-calculator/" />
+  <link rel="canonical" href="https://dcsolanaprojects.github.io/en/supermarket-trip-calculator/" />
 
   <style>
     * { box-sizing: border-box; }
@@ -379,7 +379,7 @@
             Leave empty if you only want to calculate fuel cost.
             If you want to include maintenance, insurance, taxes or depreciation,
             calculate your
-            <a href="https://dcsolanaprojects.github.io/en/en/monthly-car-cost/">real monthly car cost</a>.
+            <a href="https://dcsolanaprojects.github.io/en/monthly-car-cost/">real monthly car cost</a>.
           </div>
         </div>
       </div>
@@ -407,9 +407,9 @@
     </p>
 <div class="related-tools">
   <strong>Related tools</strong>
-  <a href="https://dcsolanaprojects.github.io/en/en/monthly-car-cost/">Monthly car cost</a> ·
-  <a href="https://dcsolanaprojects.github.io/en/en/gas-station-calculator/">Cheaper gas station</a> ·
-  <a href="https://dcsolanaprojects.github.io/en/en/supermarket-trip-calculator/">Another supermarket</a>
+  <a href="https://dcsolanaprojects.github.io/en/monthly-car-cost/">Monthly car cost</a> ·
+  <a href="https://dcsolanaprojects.github.io/en/gas-station-calculator/">Cheaper gas station</a> ·
+  <a href="https://dcsolanaprojects.github.io/en/supermarket-trip-calculator/">Another supermarket</a>
 </div>
     <div class="footer-link">
       <a href="https://dcsolanaprojects.github.io/en/">View all tools →</a>
@@ -529,13 +529,13 @@
       advancedBlockEl.style.display = isHidden ? "block" : "none";
 
       toggleAdvancedEl.textContent = isHidden
-        ? "Ocultar coste completo del coche"
+        ? "Hide full car cost"
         : "Use full car cost →";
 
       if (hintCosteKmEl && !vieneDeCosteMensual) {
         if (isHidden) {
           const linkCosteMensual = buildUrl(
-            "https://dcsolanaprojects.github.io/en/en/monthly-car-cost/",
+            "https://dcsolanaprojects.github.io/en/monthly-car-cost/",
             {
               consumo: consumoEl.value,
               precio: precioEl.value,
@@ -559,7 +559,7 @@
   if (vieneDeCosteMensual && advancedBlockEl) {
     advancedBlockEl.style.display = "block";
     if (toggleAdvancedEl) {
-      toggleAdvancedEl.textContent = "Ocultar coste completo del coche";
+      toggleAdvancedEl.textContent = "Hide full car cost";
     }
   }
 
@@ -592,7 +592,7 @@
     }
 
     const linkCosteKm = buildUrl(
-      "https://dcsolanaprojects.github.io/en/en/car-cost-per-km/",
+      "https://dcsolanaprojects.github.io/en/car-cost-per-km/",
       {
         consumo: v.consumo,
         precio: v.precio,
@@ -604,7 +604,7 @@
     );
 
     const linkCosteMensual = buildUrl(
-      "https://dcsolanaprojects.github.io/en/en/monthly-car-cost/",
+      "https://dcsolanaprojects.github.io/en/monthly-car-cost/",
       {
         consumo: v.consumo,
         precio: v.precio,
@@ -615,7 +615,7 @@
     );
 
     const linkGasolina = buildUrl(
-      "https://dcsolanaprojects.github.io/en/en/gas-station-calculator/",
+      "https://dcsolanaprojects.github.io/en/gas-station-calculator/",
       {
         consumo: v.consumo,
         precio: v.precio,
