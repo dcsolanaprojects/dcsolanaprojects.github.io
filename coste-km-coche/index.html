@@ -69,7 +69,21 @@
       margin-bottom: 6px;
       color: #374151;
     }
+.lang-switch {
+  margin-bottom: 14px;
+  font-size: 13px;
+  text-align: right;
+}
 
+.lang-switch a {
+  color: #6b7280;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.lang-switch a:hover {
+  text-decoration: underline;
+}
     input {
       padding: 12px;
       border-radius: 10px;
@@ -246,6 +260,9 @@
 
 <body>
   <div class="container">
+    <div class="lang-switch">
+  <a href="/en/car-cost-per-km/" id="langSwitchLink" hreflang="en">English version</a>
+</div>
     <h1>¿Cuánto te cuesta tu coche por km?</h1>
 
     <p class="lead">
@@ -309,7 +326,7 @@ const detalleEl = document.getElementById("detalle");
     const accionesEl = document.getElementById("acciones");
     const hintCosteKmEl = document.getElementById("hintCosteKm");
     const linkHintCosteMensualEl = document.getElementById("linkHintCosteMensual");
-
+const langSwitchLinkEl = document.getElementById("langSwitchLink");
     const params = new URLSearchParams(window.location.search);
     const returnTo = params.get("return");
 
@@ -497,12 +514,47 @@ const linkSupermercado = buildUrl(
         `;
       }
     }
+function actualizarLangSwitch() {
+  if (!langSwitchLinkEl) return;
 
+  const consumo = parseFloat(consumoEl.value);
+  const precio = parseFloat(precioEl.value);
+  const extra = parseFloat(extraCosteEl.value) || 0;
+
+  const langParams = new URLSearchParams();
+
+  if (!isNaN(consumo)) langParams.set("consumo", consumo);
+  if (!isNaN(precio)) langParams.set("precio", precio);
+  if (!isNaN(extra)) langParams.set("extraCoste", extra);
+
+  [
+    "costeKm",
+    "kmAnuales",
+    "seguroAnual",
+    "mantenimientoAnual",
+    "otrosAnuales",
+    "depreciacionAnual",
+    "financiacionAnual",
+    "desvio",
+    "diferencia",
+    "litros",
+    "ahorroCompra",
+    "origen",
+    "return"
+  ].forEach(param => {
+    const value = params.get(param);
+    if (value !== null && value !== "") {
+      langParams.set(param, value);
+    }
+  });
+
+  langSwitchLinkEl.href = `/en/car-cost-per-km/?${langParams.toString()}`;
+}
     function calcular() {
       const consumo = parseFloat(consumoEl.value);
       const precio = parseFloat(precioEl.value);
       const extra = parseFloat(extraCosteEl.value) || 0;
-
+actualizarLangSwitch();
       if (isNaN(consumo) || isNaN(precio) || consumo <= 0 || precio <= 0 || extra < 0) {
         resultadoEl.textContent = "Introduce valores válidos.";
   volverLinkEl.innerHTML = "";
