@@ -518,7 +518,46 @@
         100 km → ${formatEuro(totalKm * 100)}<br><br>
         Driving 5 extra km costs approximately ${formatEuro(coste5km)}.
       `;
+const commonParams = copyKnownParams({
+  consumo: consumo,
+  precio: precio,
+  extraCoste: extra.toFixed(4),
+  costeKm: totalKm.toFixed(4)
+});
 
+const gasolinaParams = {
+  ...commonParams,
+  return: "gasolina"
+};
+
+const supermercadoParams = {
+  ...commonParams,
+  return: "supermercado"
+};
+
+const costeMensualParams = copyKnownParams({
+  consumo: consumo,
+  precio: precio,
+  return: "coste-km"
+});
+
+const gasolinaUrl = buildUrl("https://dcsolanaprojects.github.io/en/gas-station-calculator/", gasolinaParams);
+const supermercadoUrl = buildUrl("https://dcsolanaprojects.github.io/en/supermarket-trip-calculator/", supermercadoParams);
+const costeMensualUrl = buildUrl("https://dcsolanaprojects.github.io/en/monthly-car-cost/", costeMensualParams);
+
+volverLinkEl.innerHTML = "";
+
+if (returnTo === "gasolina") {
+  volverLinkEl.innerHTML = `<a href="${gasolinaUrl}">← Back to gas station with these values</a>`;
+}
+
+if (returnTo === "supermercado") {
+  volverLinkEl.innerHTML = `<a href="${supermercadoUrl}">← Back to supermarket calculator with these values</a>`;
+}
+
+if (returnTo === "coste-mensual") {
+  volverLinkEl.innerHTML = `<a href="${costeMensualUrl}">← Back to monthly car cost with these values</a>`;
+}
       actualizarHint();
     }
 
